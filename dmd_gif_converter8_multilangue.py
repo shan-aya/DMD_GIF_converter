@@ -26,6 +26,7 @@ import time
 import datetime
 import math
 import random
+import json
 
 # ============================================================================
 # LOGGER
@@ -62,6 +63,114 @@ class Logger:
 
 # Instance globale du logger
 logger = Logger()
+
+# ============================================================================
+# GESTIONNAIRE DE CONFIGURATION (METTRE EN PREMIER)
+# ============================================================================
+
+class ConfigManager:
+    """Sauvegarde et charge tous les paramètres"""
+    
+    def __init__(self):
+        # Détecter si on est dans un exe PyInstaller
+        if getattr(sys, 'frozen', False):
+            # Mode exe
+            base_path = Path(sys.executable).parent
+        else:
+            # Mode script
+            base_path = Path(__file__).parent
+        
+        self.config_file = base_path / "config.json"
+        print(f"📂 Chemin config: {self.config_file}")
+        self.config = self.load_config()
+    
+    def load_config(self):
+        """Charge la configuration"""
+        if self.config_file.exists():
+            try:
+                with open(self.config_file, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                print(f"✅ Config chargée: {self.config_file}")
+                print(f"   Contenu: {data}")
+                return data
+            except Exception as e:
+                print(f"❌ Erreur load config: {e}")
+                return {}
+        else:
+            print(f"⚠️ Config introuvable: {self.config_file}")
+            return {}
+    
+    def save_config(self):
+        """Sauvegarde la configuration"""
+        try:
+            with open(self.config_file, 'w', encoding='utf-8') as f:
+                json.dump(self.config, f, indent=4)
+            print(f"💾 Config sauvegardée: {self.config_file}")
+        except Exception as e:
+            print(f"❌ Erreur save config: {e}")
+    
+    def get(self, key, default=None):
+        return self.config.get(key, default)
+    
+    def set(self, key, value):
+        self.config[key] = value
+        self.save_config()
+
+config_manager = ConfigManager()
+
+# ============================================================================
+# SYSTÈME MULTILINGUE (APRÈS ConfigManager)
+# ============================================================================
+
+class LanguageManager:
+    """Gestionnaire de langues avec fichiers JSON"""
+    
+    def __init__(self):
+        self.current_lang = 'fr'
+        self.translations = {}
+        self.load_languages()
+        # Charger langue depuis config
+        saved_lang = config_manager.get('language', 'fr')
+        if saved_lang in self.translations:
+            self.current_lang = saved_lang
+        print(f"🌍 Langue initialisée: {self.current_lang}")
+    
+
+    def load_languages(self):
+        lang_dir = Path(__file__).parent
+        # Détecter si on est dans un exe
+        if getattr(sys, 'frozen', False):
+            lang_dir = Path(sys.executable).parent
+        else:
+            lang_dir = Path(__file__).parent
+        
+        print(f"📂 Chemin langues: {lang_dir}")
+        
+        # Détecter si on est dans un exe
+        if getattr(sys, 'frozen', False):
+            lang_dir = Path(sys.executable).parent
+        else:
+            lang_dir = Path(__file__).parent
+        
+        print(f"📂 Chemin langues: {lang_dir}")
+        
+        for lang_code in ['fr', 'en', 'es']:
+            lang_file = lang_dir / f'lang_{lang_code}.json'
+            if lang_file.exists():
+                with open(lang_file, 'r', encoding='utf-8') as f:
+                    self.translations[lang_code] = json.load(f)
+            else:
+                self.translations[lang_code] = {'app_title': 'DMD Converter', 'ready': 'Ready'}
+    
+    def set_language(self, lang_code):
+        if lang_code in self.translations:
+            self.current_lang = lang_code
+            config_manager.set('language', lang_code)
+    
+    def get(self, key, default=''):
+        return self.translations.get(self.current_lang, {}).get(key, default)
+
+lang_manager = LanguageManager()
 
 
 # ============================================================================
@@ -1035,7 +1144,7 @@ class DMDConverter:
     
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title("DMD GIF Converter 128x32 - IA Enhanced v2.0")
+        self.update_title()
         self.root.state('zoomed')  # Plein écran fenêtré
         
         # Données
@@ -1054,8 +1163,12 @@ class DMDConverter:
         self.locked_proposal = None
         
         # Paramètres
-        self.theme = tk.StringVar(value="dark")
-        self.add_anim_to_name = tk.BooleanVar(value=True)
+        self.theme = tk.StringVar(value=config_manager.get('theme', 'dark'))
+        self.theme.trace_add('write', lambda *args: config_manager.set('theme', self.theme.get()))
+        self.theme.trace_add('write', lambda *args: config_manager.set('theme', self.theme.get()))
+        self.add_anim_to_name = tk.BooleanVar(value=config_manager.get('add_anim_to_name', True))
+        self.add_anim_to_name.trace_add('write', lambda *args: config_manager.set('add_anim_to_name', self.add_anim_to_name.get()))
+        self.add_anim_to_name.trace_add('write', lambda *args: config_manager.set('add_anim_to_name', self.add_anim_to_name.get()))
         
         # Manuel
         self.manual_image = None
@@ -1084,6 +1197,31 @@ class DMDConverter:
         
         self.setup_ui()
         self.apply_theme()
+    
+
+    def apply_translations(self):
+        """Force l'application des traductions au démarrage"""
+        print(f"🔄 Application traductions: {lang_manager.current_lang}")
+        
+        # Mettre à jour titre
+        self.root.title(lang_manager.get('app_title', 'DMD GIF Converter 128x32'))
+        
+        # Mettre à jour onglets
+        self.notebook.tab(0, text=lang_manager.get('tab_auto', 'AUTO'))
+        self.notebook.tab(1, text=lang_manager.get('tab_manual', 'MANUEL'))
+        self.notebook.tab(2, text=lang_manager.get('tab_textscroll', 'TEXTSCROLL'))
+        self.notebook.tab(3, text=lang_manager.get('tab_params', 'PARAMETRES'))
+        self.notebook.tab(4, text=lang_manager.get('tab_debug', 'DEBUG'))
+        
+        # Mettre à jour status
+        self.progress_var.set(lang_manager.get('ready'))
+        
+        print("✅ Traductions appliquées")
+    
+    def update_title(self):
+        """Met à jour le titre selon la langue"""
+        self.root.title(lang_manager.get('app_title', 'DMD GIF Converter 128x32'))
+
         logger.info("Application démarrée v2.0")
     
     def setup_ui(self):
@@ -1128,10 +1266,15 @@ class DMDConverter:
         footer = ttk.Frame(main_container)
         footer.pack(fill=tk.X, padx=10, pady=(0, 5))
         
-        self.progress_var = tk.StringVar(value="Prêt")
+        self.progress_var = tk.StringVar(value='')
         ttk.Label(footer, textvariable=self.progress_var).pack(side=tk.LEFT)
         
         ttk.Label(footer, text="Shan_ayA 2026", font=('Arial', 8, 'italic')).pack(side=tk.RIGHT)
+        
+        # APPLIQUER traductions après création interface
+        self.apply_translations()
+        
+        
     
     def setup_auto_tab(self):
         """Configuration onglet AUTO avec IA"""
@@ -1157,17 +1300,23 @@ class DMDConverter:
         row1.pack(fill=tk.X, pady=2)
         
         ttk.Label(row1, text="FPS:").pack(side=tk.LEFT)
-        self.fps_var = tk.IntVar(value=10)
+        self.fps_var = tk.IntVar(value=config_manager.get('fps', 10))
+        self.fps_var.trace_add('write', lambda *args: config_manager.set('fps', self.fps_var.get()))
+        self.fps_var.trace_add('write', lambda *args: config_manager.set('fps', self.fps_var.get()))
         ttk.Spinbox(row1, from_=1, to=60, textvariable=self.fps_var, width=10,
                    command=self.on_global_param_change).pack(side=tk.LEFT, padx=5)
         
         ttk.Label(row1, text="Durée (s):").pack(side=tk.LEFT, padx=(20, 5))
-        self.duration_var = tk.DoubleVar(value=2.0)
+        self.duration_var = tk.DoubleVar(value=config_manager.get('duration', 2.0))
+        self.duration_var.trace_add('write', lambda *args: config_manager.set('duration', self.duration_var.get()))
+        self.duration_var.trace_add('write', lambda *args: config_manager.set('duration', self.duration_var.get()))
         ttk.Spinbox(row1, from_=0.5, to=10, increment=0.5, textvariable=self.duration_var, width=10,
                    command=self.on_global_param_change).pack(side=tk.LEFT)
         
         ttk.Label(row1, text="Vitesse scroll:").pack(side=tk.LEFT, padx=(20, 5))
-        self.scroll_speed_var = tk.IntVar(value=1)
+        self.scroll_speed_var = tk.IntVar(value=config_manager.get('scroll_speed', 1))
+        self.scroll_speed_var.trace_add('write', lambda *args: config_manager.set('scroll_speed', self.scroll_speed_var.get()))
+        self.scroll_speed_var.trace_add('write', lambda *args: config_manager.set('scroll_speed', self.scroll_speed_var.get()))
         ttk.Spinbox(row1, from_=1, to=10, textvariable=self.scroll_speed_var, width=10,
                    command=self.on_global_param_change).pack(side=tk.LEFT)
         
@@ -1176,17 +1325,23 @@ class DMDConverter:
         row2.pack(fill=tk.X, pady=2)
         
         ttk.Label(row2, text="Contraste:").pack(side=tk.LEFT)
-        self.contrast_var = tk.DoubleVar(value=1.5)
+        self.contrast_var = tk.DoubleVar(value=config_manager.get('contrast', 1.5))
+        self.contrast_var.trace_add('write', lambda *args: config_manager.set('contrast', self.contrast_var.get()))
+        self.contrast_var.trace_add('write', lambda *args: config_manager.set('contrast', self.contrast_var.get()))
         ttk.Spinbox(row2, from_=1.0, to=3.0, increment=0.1, textvariable=self.contrast_var, width=10,
                    command=self.on_global_param_change).pack(side=tk.LEFT, padx=5)
         
         ttk.Label(row2, text="Saturation:").pack(side=tk.LEFT, padx=(20, 5))
-        self.saturation_var = tk.DoubleVar(value=1.3)
+        self.saturation_var = tk.DoubleVar(value=config_manager.get('saturation', 1.3))
+        self.saturation_var.trace_add('write', lambda *args: config_manager.set('saturation', self.saturation_var.get()))
+        self.saturation_var.trace_add('write', lambda *args: config_manager.set('saturation', self.saturation_var.get()))
         ttk.Spinbox(row2, from_=0.5, to=2.0, increment=0.1, textvariable=self.saturation_var, width=10,
                    command=self.on_global_param_change).pack(side=tk.LEFT)
         
         ttk.Label(row2, text="Couleurs GIF:").pack(side=tk.LEFT, padx=(20, 5))
-        self.color_count_var = tk.IntVar(value=256)
+        self.color_count_var = tk.IntVar(value=config_manager.get('color_count', 256))
+        self.color_count_var.trace_add('write', lambda *args: config_manager.set('color_count', self.color_count_var.get()))
+        self.color_count_var.trace_add('write', lambda *args: config_manager.set('color_count', self.color_count_var.get()))
         color_combo = ttk.Combobox(row2, textvariable=self.color_count_var,
                                    values=[8, 16, 32, 64, 128, 256], state="readonly", width=10)
         color_combo.pack(side=tk.LEFT)
@@ -1445,7 +1600,7 @@ class DMDConverter:
 
         # Animations et paramètres regroupés
         anim_frame = ttk.LabelFrame(right_panel, text="Animations & Paramètres", padding="5")
-        anim_frame.pack(fill=tk.X, pady=(0, 10), expand=True)
+        anim_frame.pack(fill=tk.X, pady=(0, 10))
         
         # Type animation
         row1 = ttk.Frame(anim_frame)
@@ -1473,15 +1628,18 @@ class DMDConverter:
         row2.pack(fill=tk.X, pady=2)
         
         ttk.Label(row2, text="FPS:").pack(side=tk.LEFT)
-        self.manual_fps = tk.IntVar(value=10)
+        self.manual_fps = tk.IntVar(value=config_manager.get('manual_fps', 10))
+        self.manual_fps.trace_add('write', lambda *args: config_manager.set('manual_fps', self.manual_fps.get()))
         ttk.Spinbox(row2, from_=1, to=60, textvariable=self.manual_fps, width=10).pack(side=tk.LEFT, padx=5)
         
         ttk.Label(row2, text="Vitesse:").pack(side=tk.LEFT, padx=(20, 5))
-        self.manual_scroll_speed = tk.IntVar(value=2)
+        self.manual_scroll_speed = tk.IntVar(value=config_manager.get('manual_scroll_speed', 2))
+        self.manual_scroll_speed.trace_add('write', lambda *args: config_manager.set('manual_scroll_speed', self.manual_scroll_speed.get()))
         ttk.Spinbox(row2, from_=1, to=10, textvariable=self.manual_scroll_speed, width=10).pack(side=tk.LEFT)
         
         ttk.Label(row2, text="Durée (s):").pack(side=tk.LEFT, padx=(20, 5))
-        self.manual_duration = tk.DoubleVar(value=2.0)
+        self.manual_duration = tk.DoubleVar(value=config_manager.get('manual_duration', 2.0))
+        self.manual_duration.trace_add('write', lambda *args: config_manager.set('manual_duration', self.manual_duration.get()))
         ttk.Spinbox(row2, from_=0.1, to=30, increment=0.1, textvariable=self.manual_duration, width=10).pack(side=tk.LEFT)
         # Options boucle
         row3 = ttk.Frame(anim_frame)
@@ -1539,7 +1697,7 @@ class DMDConverter:
         info_image_frame = ttk.LabelFrame(right_panel, text="ℹ️ Informations Image", padding="5")
         info_image_frame.pack(fill=tk.BOTH, expand=True, pady=(10, 0))
         
-        self.manual_info_text = tk.Text(info_image_frame, height=8, width=45, wrap=tk.WORD, 
+        self.manual_info_text = tk.Text(info_image_frame, height=6, width=45, wrap=tk.WORD, 
                                         state='disabled', font=('Courier', 9))
         self.manual_info_text.pack(fill=tk.BOTH, expand=True)
 
@@ -1580,7 +1738,8 @@ class DMDConverter:
                     state="readonly", width=20).pack(side=tk.LEFT, padx=5)
         
         ttk.Label(row1, text="Taille:").pack(side=tk.LEFT, padx=(20, 5))
-        self.text_font_size = tk.IntVar(value=20)
+        self.text_font_size = tk.IntVar(value=config_manager.get('text_font_size', 20))
+        self.text_font_size.trace_add('write', lambda *args: config_manager.set('text_font_size', self.text_font_size.get()))
         ttk.Spinbox(row1, from_=8, to=48, textvariable=self.text_font_size, width=10).pack(side=tk.LEFT)
         
         row2 = ttk.Frame(font_frame)
@@ -1649,15 +1808,18 @@ class DMDConverter:
         row2.pack(fill=tk.X, pady=2)
         
         ttk.Label(row2, text="FPS:").pack(side=tk.LEFT)
-        self.text_fps = tk.IntVar(value=10)
+        self.text_fps = tk.IntVar(value=config_manager.get('text_fps', 10))
+        self.text_fps.trace_add('write', lambda *args: config_manager.set('text_fps', self.text_fps.get()))
         ttk.Spinbox(row2, from_=1, to=60, textvariable=self.text_fps, width=10).pack(side=tk.LEFT, padx=5)
         
         ttk.Label(row2, text="Vitesse:").pack(side=tk.LEFT, padx=(20, 5))
-        self.text_speed = tk.IntVar(value=2)
+        self.text_speed = tk.IntVar(value=config_manager.get('text_speed', 2))
+        self.text_speed.trace_add('write', lambda *args: config_manager.set('text_speed', self.text_speed.get()))
         ttk.Spinbox(row2, from_=1, to=10, textvariable=self.text_speed, width=10).pack(side=tk.LEFT)
         
         ttk.Label(row2, text="Durée (s):").pack(side=tk.LEFT, padx=(20, 5))
-        self.text_duration = tk.DoubleVar(value=3.0)
+        self.text_duration = tk.DoubleVar(value=config_manager.get('text_duration', 3.0))
+        self.text_duration.trace_add('write', lambda *args: config_manager.set('text_duration', self.text_duration.get()))
         ttk.Spinbox(row2, from_=1.0, to=30, increment=0.5, textvariable=self.text_duration, width=10).pack(side=tk.LEFT)
         
         ttk.Checkbutton(row2, text="Auto-ajuster", variable=tk.BooleanVar(value=True)).pack(side=tk.LEFT, padx=20)
@@ -1703,6 +1865,19 @@ class DMDConverter:
         main_frame = ttk.Frame(self.params_frame, padding="20")
         main_frame.pack(fill=tk.BOTH, expand=True)
         
+        # LANGUE
+        lang_frame = ttk.LabelFrame(main_frame, text="🌍 Langue / Language / Idioma", padding="10")
+        lang_frame.pack(fill=tk.X, pady=(0, 20))
+        
+        self.lang_var = tk.StringVar(value=lang_manager.current_lang)
+        
+        ttk.Radiobutton(lang_frame, text="🇫🇷 Français", variable=self.lang_var, 
+                       value="fr", command=self.change_language).pack(anchor=tk.W, pady=5)
+        ttk.Radiobutton(lang_frame, text="🇬🇧 English", variable=self.lang_var, 
+                       value="en", command=self.change_language).pack(anchor=tk.W, pady=5)
+        ttk.Radiobutton(lang_frame, text="🇪🇸 Español", variable=self.lang_var, 
+                       value="es", command=self.change_language).pack(anchor=tk.W, pady=5)
+        
         # Thème
         theme_frame = ttk.LabelFrame(main_frame, text="Apparence", padding="10")
         theme_frame.pack(fill=tk.X, pady=(0, 20))
@@ -1730,7 +1905,8 @@ class DMDConverter:
         quality_frame.pack(fill=tk.X, pady=5)
         
         ttk.Label(quality_frame, text="Couleurs GIF:").pack(side=tk.LEFT)
-        self.default_colors = tk.IntVar(value=256)
+        self.default_colors = tk.IntVar(value=config_manager.get('default_colors', 256))
+        self.default_colors.trace_add('write', lambda *args: config_manager.set('default_colors', self.default_colors.get()))
         ttk.Combobox(quality_frame, textvariable=self.default_colors,
                     values=[8, 16, 32, 64, 128, 256], state="readonly", width=10).pack(side=tk.LEFT, padx=5)
         
@@ -1751,7 +1927,24 @@ class DMDConverter:
                        variable=tk.BooleanVar(value=False)).pack(anchor=tk.W, pady=5)
         
         ttk.Button(logs_frame, text="📄 Exporter logs", command=self.export_logs).pack(anchor=tk.W, pady=5)
+    def change_language(self):
+        """Change la langue de l'interface"""
+        new_lang = self.lang_var.get()
+        lang_manager.set_language(new_lang)
+        config_manager.set('language', new_lang)
+        logger.info(f"Langue changée: {new_lang}")
+        
+        msg_restart = {
+            'fr': "Veuillez redémarrer l'application pour appliquer la nouvelle langue.",
+            'en': "Please restart the application to apply the new language.",
+            'es': "Por favor reinicie la aplicación para aplicar el nuevo idioma."
+        }
+        
+        messagebox.showinfo("Info", msg_restart.get(new_lang, msg_restart['en']))
     
+
+
+
     def setup_debug_tab(self):
         """Configuration onglet DEBUG"""
         main_frame = ttk.Frame(self.debug_frame, padding="10")
@@ -1826,84 +2019,29 @@ class DMDConverter:
         logger.info("Logs effacés")
     
     def apply_theme(self):
-        """Applique le thème sélectionné avec plus de variété"""
+        """Applique le thème sélectionné"""
+        theme = self.theme.get()
+        config_manager.set('theme', theme)
+        
         style = ttk.Style()
-        
-        if self.theme.get() == "dark":
-            # Palette sombre variée
-            bg_main = '#1e1e1e'
-            bg_secondary = '#2d2d2d'
-            bg_input = '#3c3c3c'
-            fg_main = '#e0e0e0'
-            fg_accent = '#4a9eff'
-            border = '#555555'
-            select_bg = '#0d47a1'
-            
-            self.root.configure(bg=bg_main)
+        if theme == "dark":
             style.theme_use('clam')
-            
-            style.configure('.', background=bg_main, foreground=fg_main,
-                          fieldbackground=bg_input, bordercolor=border)
-            style.configure('TFrame', background=bg_main)
-            style.configure('TLabel', background=bg_main, foreground=fg_main)
-            style.configure('TLabelframe', background=bg_secondary, foreground=fg_accent, borderwidth=2)
-            style.configure('TLabelframe.Label', background=bg_secondary, foreground=fg_accent, font=('Arial', 9, 'bold'))
-            style.configure('TButton', background=bg_input, foreground=fg_main, borderwidth=1, relief=tk.RAISED)
-            style.map('TButton', background=[('active', '#4a4a4a'), ('pressed', '#5a5a5a')])
-            style.configure('TCheckbutton', background=bg_main, foreground=fg_main)
-            style.configure('TRadiobutton', background=bg_main, foreground=fg_main)
-            style.configure('TNotebook', background=bg_main, borderwidth=0)
-            style.configure('TNotebook.Tab', background=bg_secondary, foreground=fg_main, padding=[10, 5])
-            style.map('TNotebook.Tab', background=[('selected', bg_input)], foreground=[('selected', fg_accent)])
-            
-            if hasattr(self, 'canvas_original'):
-                self.canvas_original.configure(bg='#0a0a0a')
-                self.canvas_dmd_main.configure(bg='black')
-                self.image_listbox.configure(bg=bg_input, fg=fg_main, selectbackground=select_bg, selectforeground='white')
-                
-                for canvas in self.proposal_canvases:
-                    canvas.configure(bg='black')
+            style.configure('.', background='#2b2b2b', foreground='white',
+                          fieldbackground='#2b2b2b', bordercolor='#404040')
+            style.configure('TLabel', background='#2b2b2b', foreground='white')
+            style.configure('TFrame', background='#2b2b2b')
+            style.configure('TLabelframe', background='#2b2b2b', foreground='white')
+            style.configure('TLabelframe.Label', background='#2b2b2b', foreground='white')
+            style.configure('TButton', background='#404040', foreground='white')
+            style.map('TButton', background=[('active', '#505050')])
+            self.root.configure(bg='#2b2b2b')
         else:
-            # Palette claire variée
-            bg_main = '#f5f5f5'
-            bg_secondary = '#ffffff'
-            bg_input = '#ffffff'
-            fg_main = '#212121'
-            fg_accent = '#1976d2'
-            border = '#bdbdbd'
-            select_bg = '#bbdefb'
-            
-            self.root.configure(bg=bg_main)
-            style.theme_use('clam')
-            
-            style.configure('.', background=bg_main, foreground=fg_main,
-                          fieldbackground=bg_input, bordercolor=border)
-            style.configure('TFrame', background=bg_main)
-            style.configure('TLabel', background=bg_main, foreground=fg_main)
-            style.configure('TLabelframe', background=bg_secondary, foreground=fg_accent, borderwidth=2)
-            style.configure('TLabelframe.Label', background=bg_secondary, foreground=fg_accent, font=('Arial', 9, 'bold'))
-            style.configure('TButton', background='#e0e0e0', foreground=fg_main, borderwidth=1, relief=tk.RAISED)
-            style.map('TButton', background=[('active', '#d0d0d0'), ('pressed', '#c0c0c0')])
-            style.configure('TCheckbutton', background=bg_main, foreground=fg_main)
-            style.configure('TRadiobutton', background=bg_main, foreground=fg_main)
-            style.configure('TNotebook', background=bg_main, borderwidth=0)
-            style.configure('TNotebook.Tab', background='#e0e0e0', foreground=fg_main, padding=[10, 5])
-            style.map('TNotebook.Tab', background=[('selected', bg_secondary)], foreground=[('selected', fg_accent)])
-            
-            if hasattr(self, 'canvas_original'):
-                self.canvas_original.configure(bg='#fafafa')
-                self.canvas_dmd_main.configure(bg='black')
-                self.image_listbox.configure(bg=bg_input, fg=fg_main, selectbackground=select_bg, selectforeground=fg_main)
-                
-                for canvas in self.proposal_canvases:
-                    canvas.configure(bg='black')
+            style.theme_use('default')
+            self.root.configure(bg='#f0f0f0')
         
-        logger.debug(f"Thème appliqué: {self.theme.get()}")
+        logger.info(f"Thème appliqué: {theme}")
     
-    # ========================================================================
-    # ONGLET AUTO - Gestion
-    # ========================================================================
-    
+
     def on_tab_changed(self, event):
         """Callback changement d'onglet"""
         current_tab = self.notebook.index(self.notebook.select())
@@ -2884,18 +3022,6 @@ Cible DMD: 4.0 (128/32)
     # ========================================================================
     # ONGLET TEXTSCROLL
     # ========================================================================
-    
-    
-    def apply_font_to_textbox(self):
-        """Applique la police à la zone de texte"""
-        try:
-            family = self.text_font_family.get()
-            size = self.text_font_size.get()
-            weight = 'bold' if self.text_bold.get() else 'normal'
-            slant = 'italic' if self.text_italic.get() else 'roman'
-            self.text_input.config(font=(family, size, weight, slant))
-        except:
-            pass
     
     def clear_text_placeholder(self, event):
         """Efface le placeholder au focus"""
