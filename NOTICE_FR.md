@@ -36,7 +36,7 @@ L'onglet **AUTO** permet la conversion automatique d'images en GIF optimisés po
 ### Astuces
 - Sélectionnez vos dossiers puis cliquez sur "Traiter tout" pour générer automatiquement les versions optimisées choisies par le moteur comparatif.
 - Verrouillez une proposition IA pour l appliquer a toutes les images ( exclu le moteur comparatif ).
-- si vous selectionnez une image et que vous passez sur l onglet manuel, cette derniere est automatiquement affichee et sortie du traitement automatisee si vous     generé un fichier.gif
+- si vous selectionnez une image et que vous passez sur l onglet manuel, cette derniere est automatiquement affichee et sortie du traitement automatisee si vous     generez un fichier.gif
 
 ---
 
