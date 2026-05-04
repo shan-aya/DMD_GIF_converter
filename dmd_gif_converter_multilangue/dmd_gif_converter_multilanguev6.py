@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-DMD GIF Converter 128x32 - v2.0
+DMD GIF Converter 128x32 - v3.0
 Shan_ayA 2026
 
 Application multilingue complète de conversion d'images en GIF optimisés pour écrans DMD 128x32
