@@ -26,7 +26,7 @@ L'onglet **AUTO** permet la conversion automatique d'images en GIF optimisés po
   - Contraste, Saturation et nombre de couleurs GIF 🎨
 
 - 🖼️ **Liste des images** affichée avec possibilité de sélectionner, tout cocher/décocher, inverser la sélection.
-- 🔓 **Réautoriser une image** pour reactiver le traitement d une image exclue par le passe en mode MANUEL.
+- 🔓 **Réautoriser une image** pour reactiver le traitement d une image exclue par le passage en mode MANUEL.
 - 💻 **Prévisualisation** de l'image originale et du rendu DMD 128x32.
 - 💡 **Propositions IA** : Affichées sous forme de miniatures avec verrouillage possible.
 - 🚀 **Boutons** :
