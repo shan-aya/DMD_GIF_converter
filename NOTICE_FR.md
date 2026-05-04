@@ -21,12 +21,12 @@ L'onglet **AUTO** permet la conversion automatique d'images en GIF optimisés po
 - ✔️ **Récursif** : Inclure les sous-dossiers lors de la sélection.
 - ⚙️ **Paramètres globaux** :
   - FPS (images/seconde) ⏱️
-  - Durée de l'animation en secondes ⌛
+  - Durée de l'animation minimum en secondes ⌛
   - Vitesse du scroll (pixels/frame) 🌀
   - Contraste, Saturation et nombre de couleurs GIF 🎨
 
 - 🖼️ **Liste des images** affichée avec possibilité de sélectionner, tout cocher/décocher, inverser la sélection.
-- 🔓 **Réautoriser une image** pour rafraîchir le traitement.
+- 🔓 **Réautoriser une image** pour reactiver le traitement d une image exclue par le passe en mode MANUEL.
 - 💻 **Prévisualisation** de l'image originale et du rendu DMD 128x32.
 - 💡 **Propositions IA** : Affichées sous forme de miniatures avec verrouillage possible.
 - 🚀 **Boutons** :
@@ -34,8 +34,9 @@ L'onglet **AUTO** permet la conversion automatique d'images en GIF optimisés po
   - Traiter uniquement les images sélectionnées
 
 ### Astuces
-- Sélectionnez vos images puis cliquez sur "Traiter tout" pour générer automatiquement les versions optimisées.
-- Verrouillez une proposition IA pour la sauvegarder sans qu'elle soit écrasée lors d'autres opérations.
+- Sélectionnez vos dossiers puis cliquez sur "Traiter tout" pour générer automatiquement les versions optimisées choisies par le moteur comparatif.
+- Verrouillez une proposition IA pour l appliquer a toutes les images ( exclu le moteur comparatif ).
+- si vous selectionnez une image et que vous passez sur l onglet manuel, cette derniere est automatiquement affichee et sortie du traitement automatisee si vous     generé un fichier.gif
 
 ---
 
@@ -48,9 +49,9 @@ L'onglet **MANUEL** offre des outils avancés d'édition manuelle des images, av
 
 - 📂 **Charger une image** pour édition manuelle.
 - ✂️ **Crop 128×32** : Définir une zone de recadrage ciblée.
-- ↶ **Annuler** : Permet d'annuler la dernière modification.
+- ↶ **Annuler** : Permet d'annuler la dernière modification. historique conservé
 - 💾 **Exporter GIF** : Sauvegarder le travail.
-- 📚 **Multi-images** : Charger plusieurs images pour animations morphing.
+- 📚 **Multi-images** : Charger plusieurs images pour animations morphing ( 4 max ).
 - 🎬 **Morphing** : Générer une animation de transition entre plusieurs images.
 
 ### Effets temps réel 🖌️
@@ -79,9 +80,9 @@ Permet la création et animation de texte défilant optimisé pour DMD 128x32.
 
 ### Fonctionnalités
 
-- 📝 **Zone de texte** pour saisir le contenu à afficher.
+- 📝 **Zone de texte** pour saisir le contenu à afficher ( pas de limite ? ).
 - 👩‍🎨 **Personnalisation police** :
-  - Famille (liste complète des polices système)
+  - Famille (liste complète des polices du système utilisable)
   - Taille
   - Style Gras, Italique
   - Couleur de texte et de fond (via sélecteurs de couleur)
