@@ -28,6 +28,18 @@ Cliquez sur la langue souhaitée pour accéder à la documentation correspondant
 
 ---
 
+## 🤝 Remerciements
+
+- [RetroPixelLED original](https://github.com/fjgordillo86/RetroPixelLED)
+- [Systems logos  are released under Creative Commons Attribution-NonCommercial-NoDerivs 4.0 License CC BY-NC-ND](https://creativecommons.org/licenses/by-nc-nd/4.0/)
+- Claude IA :)
+
+## ☕ Soutenir le projet
+
+Si ce projet t’a aidé, tu peux m’offrir un café :
+
+👉 [☕ Donate via PayPal](https://www.paypal.com/paypalme/felysaya)
+
 ## Contact
 
 Pour toute question, suggestion ou contribution, créez un issue ou contactez l’auteur Shan_ayA.
