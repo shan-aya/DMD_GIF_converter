@@ -12,7 +12,7 @@
 ## Onglet AUTO 🤖
 
 ### Présentation
-L'onglet **AUTO** permet la conversion automatique d'images en GIF optimisés pour écran DMD 128x32, avec des réglages globaux et des propositions générées par un moteur IA.
+L'onglet **AUTO** permet la conversion automatique d'images en GIF optimisés pour écran DMD 128x32, avec des réglages globaux et des propositions générées par un moteur comparatif.
 
 ### Fonctionnalités
 
