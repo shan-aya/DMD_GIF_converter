@@ -36,7 +36,7 @@ Cliquez sur la langue souhaitée pour accéder à la documentation correspondant
 
 ## ☕ Soutenir le projet
 
-Si ce projet t’a aidé, tu peux m’offrir un café :
+Si ce projet t’as aidé, tu peux m’offrir un café :
 
 👉 [☕ Donate via PayPal](https://www.paypal.com/paypalme/felysaya)
 
