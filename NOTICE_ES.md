@@ -1,11 +1,10 @@
-# Manual de Uso - DMD GIF Converter 128x32 v2.0
+# Manual de Usuario - DMD GIF Converter 128x32 v2.0
 
 ## Índice
-
-- [Pestaña AUTO 🤖](#pestaña-auto-🤖)  
-- [Pestaña MANUAL ✍️](#pestaña-manual-✍️)  
-- [Pestaña TEXTSCROLL 📝](#pestaña-textscroll-📝)  
-- [Pestaña AJUSTES ⚙️](#pestaña-ajustes-⚙️)  
+- [Pestaña AUTO 🤖](#pestaña-auto-🤖)
+- [Pestaña MANUAL ✍️](#pestaña-manual-✍️)
+- [Pestaña TEXTSCROLL 📝](#pestaña-textscroll-📝)
+- [Pestaña AJUSTES ⚙️](#pestaña-ajustes-⚙️)
 - [Pestaña DEBUG 🐞](#pestaña-debug-🐞)
 
 ---
@@ -13,96 +12,109 @@
 ## Pestaña AUTO 🤖
 
 ### Presentación  
-La pestaña **AUTO** permite la conversión automática de imágenes en GIF optimizados para pantallas DMD 128x32, con ajustes globales y propuestas generadas por un motor IA.
+La pestaña **AUTO** permite la conversión automática de imágenes a GIF optimizados para pantalla DMD 128x32, con ajustes globales y propuestas generadas por un motor IA.
 
 ### Funcionalidades
 
-- 📁 **Seleccionar carpeta**: Elegir carpeta fuente que contiene imágenes.  
-- 🖼️ **Seleccionar imágenes** manualmente para convertir.  
-- ✔️ **Recursivo**: Incluir subcarpetas en la selección.  
+- 📁 **Seleccionar carpeta**: Elige una carpeta fuente que contenga imágenes.  
+- 🖼️ **Seleccionar imágenes**: Selección manual de imágenes a convertir.  
+- ✔️ **Recursivo**: Incluir subcarpetas al seleccionar.  
 - ⚙️ **Parámetros globales**:
   - FPS (imágenes/segundo) ⏱️  
-  - Duración de la animación en segundos ⌛  
-  - Velocidad del scroll (pixeles por cuadro) 🌀  
-  - Contraste, Saturación y número de colores GIF 🎨  
+  - Duración mínima en segundos ⌛  
+  - Velocidad del scroll (píxeles por frame) 🌀  
+  - Contraste, Saturación y número de colores para GIF 🎨  
 
-- 🖼️ Lista de imágenes para seleccionar, con botones para seleccionar todo, nada o invertir selección.
-- 🔓 **Reautorizar imagen** para volver a procesar una imagen.
-- 💻 Vista previa de la imagen original y versión DMD 128x32.  
-- 💡 **Propuestas IA** con miniaturas para elegir y opción de bloqueo.  
-- 🚀 Botones para procesar todo o solo la selección.
+- 🖼️ **Lista de imágenes** con opciones para seleccionar todo, nada o invertir la selección.  
+- 🔓 **Reautorizar imagen** para reactivar el procesamiento de imágenes excluidas en modo MANUAL.  
+- 💻 **Vista previa** de la imagen original y la versión DMD 128x32.  
+- 💡 **Propuestas IA** mostradas como miniaturas con opción a bloqueo.  
+- 🚀 **Botones**:
+  - Procesar todas las imágenes de la carpeta o la selección  
+  - Procesar solo las imágenes seleccionadas
 
-### Consejos  
-- Seleccione sus imágenes y pulse “Procesar todo” para generar automáticamente versiones optimizadas.  
-- Puede bloquear una propuesta IA para que no se sobrescriba.
+### Sugerencias  
+- Selecciona tu carpeta o imágenes y presiona “Procesar todo” para generar automáticamente las versiones optimizadas según el motor comparativo.  
+- Bloquea una propuesta IA para aplicarla a todas las imágenes (excluyendo el motor comparativo).  
+- Si seleccionas una imagen y cambias a la pestaña MANUAL, esta aparecerá automáticamente y saldrá del procesamiento automático al generar un archivo GIF.
 
 ---
 
 ## Pestaña MANUAL ✍️
 
 ### Presentación  
-Esta pestaña ofrece herramientas avanzadas para edición manual de imágenes con efectos y animaciones personalizadas.
+La pestaña **MANUAL** ofrece herramientas avanzadas para editar imágenes manualmente, aplicar efectos y crear animaciones personalizadas.
 
-### Funciones Principales
+### Funcionalidades principales
 
 - 📂 **Cargar imagen** para edición manual.  
-- ✂️ **Recortar 128×32** : Define un área de recorte.  
-- ↶ **Deshacer** última modificación.  
-- 💾 **Exportar GIF** del resultado.  
-- 📚 **Multi-imágenes**: cargar varias imágenes para efectos de morphing.  
-- 🎬 **Morphing** para crear animación de transición entre imágenes.
+- ✂️ **Recortar 128×32**: Definir un área de recorte precisa.  
+- ↶ **Deshacer**: Permite revertir la última modificación (historial guardado).  
+- 💾 **Exportar GIF**: Guardar el trabajo realizado.  
+- 📚 **Multi-imágenes**: Cargar hasta 4 imágenes para animaciones morphing.  
+- 🎬 **Morphing**: Generar animaciones de transición entre esas imágenes.
 
 ### Efectos en tiempo real 🖌️
 
-- Controles deslizantes para brillo, contraste, saturación y nitidez.  
-- Filtros comunes: desenfoque, gaussiano, contornos, relieve, detalle+, invertir, espejo, rotar, escala de grises, posterizar, solarizar, igualar, autocontraste.  
-- Herramientas de dibujo: relleno 🎨, goma mágica 🧹, selección de color y tolerancia.
+- Ajustes mediante sliders: brillo, contraste, saturación, nitidez.  
+- Filtros populares: desenfoque, gaussiano, contornos, relieve, detalles+, invertir, espejo horizontal/vertical, rotar 90°, blanco&negro, solarizar, posterizar, ecualizar, auto-contraste.  
+- Herramientas de dibujo: relleno 🎨 y goma mágica 🧹 con selección de color y tolerancia.
 
 ### Animación y parámetros
 
-- Selección de tipo de animación (scroll, fade, zoom, rotación, olas, rebote, flash, deslizamiento, espiral, temblor, pulso, glitch, pixelado, transición borrosa, cambio de color).  
-- Ajustes de FPS, velocidad, duración, modo de bucle (normal, ping-pong, infinito) y repeticiones.  
-- Controles avanzados: easing, retraso de comienzo, invertir dirección, opacidad.
+- Selección de animación: scroll, fade, zoom, rotación, ola, rebote, flash, deslizamiento, espiral, temblor, pulso, glitch, pixelado, transición borrosa, cambio de color.  
+- Configuración de FPS, velocidad, duración, tipo de bucle (normal, ping-pong, infinito) y repeticiones.  
+- Controles avanzados: easing, retardo inicial, invertir dirección, opacidad.
 
 ### Vista previa
 
-- Visualización en vivo de la animación a la derecha.  
-- Panel de información detallada de la imagen.
+- Visualización en vivo de la animación en el panel derecho.  
+- Estado e información detallada de la imagen.
 
 ---
 
 ## Pestaña TEXTSCROLL 📝
 
 ### Presentación  
-Permite crear y animar texto en desplazamiento optimizado para DMD 128x32.
+Permite crear y animar textos desplazándose, optimizados para DMD 128x32.
 
-### Funciones
+### Funcionalidades
 
-- 📝 Entrada de texto multi-línea.  
-- 👩‍🎨 Personalización de fuente: familia, tamaño, negrita, cursiva, color texto y fondo (selección de color).  
-- 🎨 Efectos visuales de texto: normal, 3D, fuego, nieve, hielo, metal, neón, graffiti, pixel art, outline, sombra.  
-- 🌈 Efectos de color: arcoíris, matrix, fuego, degradado, ninguno.  
-- 🔄 Animaciones de texto: scroll horizontal/vertical, scroll con ola, estilo Star Wars, scroll con rebote, máquina de escribir, explosión, lluvia Matrix, espiral, temblequeo, glitch, fundido, estático.  
-- ⏱️ Parámetros de animación: FPS, velocidad, duración y ajuste automático.
+- 📝 **Área de texto** para introducir el contenido (sin límite).  
+- 👩‍🎨 **Personalización de fuente**:
+  - Familia (lista completa de fuentes del sistema)  
+  - Tamaño  
+  - Estilos Negrita, Cursiva  
+  - Color de texto y fondo mediante selectores de color.  
+- 🎨 **Efectos visuales para texto**:
+  - Normal, 3D, fuego, nieve, hielo, metal, neón, graffiti, pixel art, contorno, sombra.  
+- 🌈 **Efectos de color**:
+  - Arcoíris, matrix, fuego, degradado, ninguno.  
+- 🔄 **Animaciones de texto**:
+  - Scroll horizontal/vertical, scroll con onda, estilo Star Wars, rebote, máquina de escribir, explosión, lluvia Matrix, espiral, temblor, glitch, fundido, estático.  
+- ⏱️ **Ajustes de animación**:
+  - FPS, velocidad, duración  
+  - Opción de auto-ajuste.
 
 ### Controles
 
 - 🎬 **Generar vista previa** de la animación.  
-- 💾 **Exportar GIF** animado con texto.
+- 💾 **Exportar GIF** para guardar la animación de texto.
 
 ---
 
 ## Pestaña AJUSTES ⚙️
 
-### Configuración Global
+### Configuración global de la aplicación
 
 - 🌍 **Idioma**: Francés 🇫🇷, Inglés 🇬🇧, Español 🇪🇸.  
-- 🎨 **Apariencia**: tema oscuro (por defecto) o claro.  
-- ⚙️ Comportamiento: opción para agregar tipo de animación en nombre de archivo exportado.  
-- 🎨 Calidad de exportación GIF: número de colores predeterminado (8,16,32,64,128,256).  
-- ⚡ Rendimiento: activar/desactivar caché IA.  
-- 🗑️ Caché: botón para vaciar caché.  
-- 📜 Logs: guardar, exportar o limpiar registros de actividad.
+- 🎨 **Apariencia**: Tema oscuro (por defecto) o claro.  
+- ⚙️ **Comportamiento**:
+  - Opción para añadir tipo de animación al nombre del archivo exportado.  
+- 🎨 **Calidad de exportación GIF**: Número de colores predeterminado [8,16,32,64,128,256].  
+- ⚡ **Rendimiento**: Activación/desactivación de la caché IA.  
+- 🗑️ **Caché**: Botón para vaciar la caché.  
+- 📜 **Logs**: Opciones para guardar, exportar o borrar los registros de actividad.
 
 ---
 
@@ -110,22 +122,22 @@ Permite crear y animar texto en desplazamiento optimizado para DMD 128x32.
 
 ### Herramientas para desarrolladores y depuración
 
-- 🗑️ Limpiar logs.  
-- ✅ Auto-scroll de logs.  
-- 🔍 Filtrar logs por nivel: TODOS, INFO, ADVERTENCIA, ERROR, DEBUG.  
-- 📝 Visualización en tiempo real con colores por nivel.
+- 🗑️ **Borrar logs**.  
+- ✅ **Auto-scroll** de registros.  
+- 🔍 **Filtrar logs** por nivel: TODO, INFO, ADVERTENCIA, ERROR, DEBUG.  
+- 📝 Visualización en tiempo real con colores según nivel.
 
 ---
 
 # Navegación entre idiomas
 
-Para cambiar al manual en francés, haga clic aquí:  
+Para cambiar al manual en francés, haz clic aquí:  
 [Leer en Français 🇫🇷](./NOTICE_FR.md)
 
 ---
 
 # Resumen
 
-Este manual guía el uso de cada pestaña del DMD GIF Converter 128x32. Use AUTO para conversión rápida, MANUAL para edición avanzada, TEXTSCROLL para crear textos animados, AJUSTES para configuración global y DEBUG para depuración y seguimiento.
+Este manual te guía en el uso de cada pestaña del DMD GIF Converter 128x32. Usa AUTO para conversiones rápidas, MANUAL para edición avanzada, TEXTSCROLL para crear textos animados, AJUSTES para configuración global y DEBUG para diagnóstico y seguimiento.
 
-✨ Para comenzar, cargue imágenes, pruebe efectos y exporte sus GIFs optimizados. Consulte DEBUG si es necesario.
+✨ Para comenzar, carga imágenes, prueba efectos y exporta tus GIFs optimizados. Consulta DEBUG en caso de problemas.
