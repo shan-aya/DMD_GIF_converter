@@ -20,7 +20,8 @@ Dépendances:
 Vous pouvez consulter la notice complète ici :
 
 - [Version Française 🇫🇷](./NOTICE_FR.md)  
-- [Versión en Español 🇪🇸](./NOTICE_ES.md)  
+- [Versión en Español 🇪🇸](./NOTICE_ES.md)
+- [Version in english EN](./NOTICE_EN.md) 
 
 Cliquez sur la langue souhaitée pour accéder à la documentation correspondante.
 
