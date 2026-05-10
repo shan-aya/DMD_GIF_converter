@@ -1,4 +1,4 @@
-# User Manual - DMD GIF Converter 128x32 v2.0
+# User Manual - DMD GIF Converter 128x32 v2.7
 
 ## Table of Contents
 - [AUTO Tab 🤖](#auto-tab-🤖)
