@@ -1,4 +1,4 @@
-# Notice d'Utilisation - DMD GIF Converter 128x32 v2.0
+# Notice d'Utilisation - DMD GIF Converter 128x32 v2.7
 
 ## Sommaire
 - [Onglet AUTO 🤖](#onglet-auto-🤖)
