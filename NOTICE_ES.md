@@ -1,4 +1,4 @@
-# Manual de Usuario - DMD GIF Converter 128x32 v2.0
+# Manual de Usuario - DMD GIF Converter 128x32 v2.7
 
 ## Índice
 - [Pestaña AUTO 🤖](#pestaña-auto-🤖)
