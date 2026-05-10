@@ -1,11 +1,11 @@
-v1   -- initial
-v2   -- + multilangue
-        - bugs
-v2.4 -- + ajout d une barre de progression
-        + refonte du moteur comparatif etape 1
-v2.7 -- + passage en modulaire
-        - correction de traductions oubliees
-        + ajout ouverture dossier de sortie en fin de batch
-        + versionnalisation du programme
-        + rajout du rafraichissement des FONTS utilisateurs a chaque lancement
-        - correction d un probleme de config.json non sauvegardé
+Release 1 -->   v1   -- initial --> 
+Release 2 -->   v2   -- + multilangue
+                        - bugs
+                v2.4 -- + ajout d une barre de progression
+                        + refonte du moteur comparatif etape 1
+                v2.7 -- + passage en modulaire
+                        - correction de traductions oubliees
+                        + ajout ouverture dossier de sortie en fin de batch
+                        + versionnalisation du programme
+                        + rajout du rafraichissement des FONTS utilisateurs a chaque lancement
+                        - correction d un probleme de config.json non sauvegardé
