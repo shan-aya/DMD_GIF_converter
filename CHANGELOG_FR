@@ -1,6 +1,8 @@
 v1   -- initial
 v2   -- + multilangue
         - bugs
+v2.4 -- + ajout d une barre de progression
+        + refonte du moteur comparatif etape 1
 v2.7 -- + passage en modulaire
         - correction de traductions oubliees
         + ajout ouverture dossier de sortie en fin de batch
