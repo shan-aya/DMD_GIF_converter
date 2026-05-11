@@ -142,6 +142,4 @@ Cette notice vous guide dans l’utilisation de chaque onglet du DMD GIF Convert
 
 ✨ Pour démarrer, chargez des images, testez les effets et exportez vos GIFs optimisés. Consultez DEBUG en cas de problème.
 
-Si ce projet t’as aidé, tu peux m’offrir un café :
-
-👉 [☕ Donate via PayPal](https://www.paypal.com/paypalme/felysaya)
+Si ce projet t’as aidé, tu peux m’offrir un café :👉 [☕ Donate via PayPal](https://www.paypal.com/paypalme/felysaya)
