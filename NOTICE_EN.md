@@ -132,7 +132,9 @@ Create and animate scrolling text optimized for DMD 128x32.
 # Language Navigation
 
 To switch to the French manual, click here:  
-[Read in French 🇫🇷](./NOTICE_FR.md)
+- [Version Française 🇫🇷](./NOTICE_FR.md)  
+- [Versión en Español 🇪🇸](./NOTICE_ES.md)
+
 
 ---
 
