@@ -141,3 +141,7 @@ Pour passer à la version espagnole, cliquez ici :
 Cette notice vous guide dans l’utilisation de chaque onglet du DMD GIF Converter 128x32. Utilisez AUTO pour la conversion rapide, MANUEL pour l’édition avancée, TEXTSCROLL pour créer des textes animés, PARAMÈTRES pour la configuration globale, et DEBUG pour dépannage et suivi.
 
 ✨ Pour démarrer, chargez des images, testez les effets et exportez vos GIFs optimisés. Consultez DEBUG en cas de problème.
+
+Si ce projet t’as aidé, tu peux m’offrir un café :
+
+👉 [☕ Donate via PayPal](https://www.paypal.com/paypalme/felysaya)
