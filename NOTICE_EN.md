@@ -143,4 +143,4 @@ This manual guides you through each tab of the DMD GIF Converter 128x32. Use AUT
 ✨ To get started, load images, experiment with effects, and export your optimized GIFs. Check DEBUG if issues arise.
 
 If this project has helped you, you can buy me a coffee:
-👉 [☕ Donate via PayPal]
+👉 [☕ Donate via PayPal](https://www.paypal.com/paypalme/felysaya)
