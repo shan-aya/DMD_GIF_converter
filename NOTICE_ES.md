@@ -132,7 +132,8 @@ Permite crear y animar textos desplazándose, optimizados para DMD 128x32.
 # Navegación entre idiomas
 
 Para cambiar al manual en francés, haz clic aquí:  
-[Leer en Français 🇫🇷](./NOTICE_FR.md)
+- [Version Française 🇫🇷](./NOTICE_FR.md)  
+- [Version in english EN](./NOTICE_EN.md) 
 
 ---
 
