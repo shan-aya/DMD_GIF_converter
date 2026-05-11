@@ -31,8 +31,8 @@ Cliquez sur la langue souhaitée pour accéder à la documentation correspondant
 ## 🤝 Remerciements
 
 - [RetroPixelLED original](https://github.com/fjgordillo86/RetroPixelLED)
-- [Systems logos  are released under Creative Commons Attribution-NonCommercial-NoDerivs 4.0 License CC BY-NC-ND](https://creativecommons.org/licenses/by-nc-nd/4.0/)
-- Claude IA :)
+- Visual Studio Code
+- [Sixth](https://trysixth.com/)
 
 ## ☕ Soutenir le projet
 
