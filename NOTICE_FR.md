@@ -131,8 +131,8 @@ Permet la création et animation de texte défilant optimisé pour DMD 128x32.
 
 # Navigation entre langues
 
-Pour passer à la version espagnole, cliquez ici :  
-[Leer en Español 🇪🇸](./NOTICE_ES.md)
+- [Versión en Español 🇪🇸](./NOTICE_ES.md)
+- [Version in english EN](./NOTICE_EN.md) 
 
 ---
 
