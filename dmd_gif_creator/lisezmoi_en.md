@@ -153,8 +153,8 @@ For each image, 6 renders are computed and shown as thumbnails:
 - An output folder is requested on first run; the relative folder structure of the
   source images (relative to the loaded folder) is recreated inside the output
   folder. When done, a message offers to open the output folder directly.
-- Images are processed **in parallel** (up to 4 at a time depending on the number of
-  CPU cores): a batch finishes much faster than one image at a time.
+- Images are processed **in parallel**, using almost all CPU cores (up to 12 images
+  at a time): a batch finishes much faster than one image at a time.
 
 ---
 

@@ -4,7 +4,7 @@
 DMD GIF Creator
 Shan_ayA 2026
 
-Version: 3.0.0
+Version: 3.0.1
 
 Application multilingue complète de conversion d'images en GIF optimisés pour écrans DMD 128x32
 avec moteur comparatif , édition manuelle avancée et génération de texte animé.
@@ -27,7 +27,27 @@ Dépendances:
 # ============================================
 # safe-modify — Historique des modifications
 # ============================================
-# Version actuelle : v82
+# Version actuelle : v84
+#
+# v84 — 2026-09-24 — safe-modify — Traitement par lot plus rapide (demande utilisateur "le traitement par lot est
+#      très long"). Profil mesuré : ~1 s/image sur 1 cœur, dont ~55 % choix des réglages et ~43 % encodage GIF
+#      (quantization par frame). (1) Workers : min(4, cpu) → max(min(4, cpu), min(12, cpu − 2)) — 12 sur une
+#      machine à 20 threads. (2) process_one_image exporte avec shared_palette=True (dmd_gif_exporter.py v3 : une
+#      palette pour toute l'animation). Mesuré sur 480 images mame/S : 62,3 s → 26,1 s (7,7 → 18,4 img/s, ×2,4),
+#      ~85 Mo de RAM par worker. Le choix des réglages (55 %) n'est pas touché : rendu identique hors palette.
+#
+# v83 — 2026-09-24 — safe-modify — Version 3.0.1 + audit des traductions (demande utilisateur : "augmente le
+#      versionning, vérifie les traductions et si certains labels ne sont pas traduits fais-le"). Méthode : harnais
+#      qui relève le texte de chaque widget en FR, EN et ES (242 textes) + scan du code des affichages dynamiques
+#      écrits en dur. ~60 textes restaient en français quelle que soit la langue : messages d'état et de
+#      progression (AUTO, MANUEL, VIDEO, lot), panneaux d'informations (image AUTO, image MANUEL, vidéo source,
+#      GIF à exporter, estimation TEXTSCROLL), titres des sélecteurs de fichiers/couleurs, en-tête de l'onglet AIDE,
+#      titres "Proposition n", durée du trim VIDEO, et les boutons Remplissage/Gomme magique (traduits au démarrage
+#      puis remis en français à chaque clic). Nouvelle fonction module-level tr(key, default, **kwargs) :
+#      lang_manager.get + str.format, repli sur le texte FR si clé absente ou paramètre invalide. 63 clés "t_*"
+#      ajoutées aux 3 lang_*.json (réutilisation des clés existantes fill/eraser/fill_active/eraser_active/
+#      your_text_here). Gabarits FR multi-lignes des panneaux en constantes K_DEFAULT_*. Les messages du journal
+#      (onglet DEBUG) restent en français (choix inchangé).
 #
 # v82 — 2026-09-24 — safe-modify — Chargement d'un gros dossier : fenêtre "Ne répond pas" pendant plusieurs
 #      minutes (retour utilisateur, dossier systems/ de 54 777 images). 3 causes, 3 correctifs :
@@ -2153,6 +2173,27 @@ class LanguageManager:
 lang_manager = LanguageManager()
 
 
+def tr(key, default, **kwargs):
+    """v83 -- texte dynamique traduit : lang_manager.get(key, default) puis
+    str.format(**kwargs). Si la cle manque dans la langue active, le texte FR
+    par defaut est utilise ; si la traduction a un parametre invalide, repli
+    sur le defaut (jamais d'exception affichee a l'utilisateur)."""
+    text = lang_manager.get(key, default)
+    if not kwargs:
+        return text
+    try:
+        return text.format(**kwargs)
+    except (KeyError, IndexError, ValueError):
+        return default.format(**kwargs)
+
+
+# Gabarits FR multi-lignes (textes par defaut des panneaux d'information)
+K_DEFAULT_VIDEO_GIF_INFO = 'Dimensions : 128 x 32 px\nFPS : {fps}\nFrames : {frames}\nCouleurs : {colors}\nBoucle : {loop}\nPoids estimé : {size}\n'
+K_DEFAULT_VIDEO_SOURCE_INFO = 'Fichier : {name}\nRésolution : {w} x {h} px\nDurée : {dur:.1f} s\nFPS source : {fps:.1f}\nFrames totales : {frames}\nTaille fichier : {size}\n'
+K_DEFAULT_IMAGE_INFO = 'Fichier : {name}\nFormat : {fmt}\nDimensions : {w} x {h} px\nMode : {mode}\nTaille : {size:.1f} KB\n\nPalette dominante :\n{palette}\n\nRatio : {ratio:.2f}\nCible DMD : 4.0 (128/32)\n'
+K_DEFAULT_MANUAL_INFO = 'Dimensions : {w} × {h} px\nMode couleur : {mode}\nMémoire : {mem:.1f} KB\nRatio : {ratio:.2f} (cible : 4.0)\nÉtat : {status}\n\nPalette dominante :\n{palette}\n\nHistorique : {count} états (position {pos}/{count})\n'
+
+
 # ============================================================================
 # MOTEUR DMD - Optimisation avancée pour écrans 128x32
 # ============================================================================
@@ -2553,7 +2594,7 @@ class DMDConverter:
     # ========================================================================
     # VERSION DU LOGICIEL
     # ========================================================================
-    APP_VERSION = "3.0.0"
+    APP_VERSION = "3.0.1"
 
     # ========================================================================
 
@@ -3097,7 +3138,7 @@ class DMDConverter:
             frame = ttk.Frame(proposals_grid, relief=tk.RAISED, borderwidth=2)
             frame.grid(row=row, column=col, padx=4, pady=3, sticky=tk.N)
 
-            label = ttk.Label(frame, text=f"Proposition {i+1}", font=("Arial", 8))
+            label = ttk.Label(frame, text=tr("t_proposal_n", "Proposition {n}", n=i + 1), font=("Arial", 8))
             label.pack(pady=(3, 1))
 
             # 384×96 (3x l'échelle native 128x32, demandé explicitement — était
@@ -3866,7 +3907,9 @@ class DMDConverter:
 
         # Durée déplacée au-dessus de la frise (demande explicite) : la zone
         # sous la frise est désormais occupée par l'échelle de temps.
-        self.video_trim_label_var = tk.StringVar(value="Durée: 0.0s (0.0s → 0.0s)")
+        self.video_trim_label_var = tk.StringVar(
+            value=tr("t_trim_duration", "Durée : {span:.1f}s ({start:.1f}s → {end:.1f}s)", span=0.0, start=0.0, end=0.0)
+        )
         ttk.Label(
             trim_frame, textvariable=self.video_trim_label_var, font=("Arial", 8)
         ).pack(anchor=tk.W)
@@ -4326,13 +4369,10 @@ class DMDConverter:
                 )
             except OSError:
                 size_str = "?"
-            info = (
-                f"Fichier: {Path(self.video_path).name}\n"
-                f"Résolution: {meta['width']} x {meta['height']} px\n"
-                f"Durée: {meta['duration']:.1f} s\n"
-                f"FPS source: {meta['fps']:.1f}\n"
-                f"Frames totales: {meta['frame_count']}\n"
-                f"Taille fichier: {size_str}\n"
+            info = tr(
+                "t_video_source_info", K_DEFAULT_VIDEO_SOURCE_INFO,
+                name=Path(self.video_path).name, w=meta["width"], h=meta["height"],
+                dur=meta["duration"], fps=meta["fps"], frames=meta["frame_count"], size=size_str,
             )
         self.video_source_info_text.config(state="normal")
         self.video_source_info_text.delete(1.0, tk.END)
@@ -4364,22 +4404,19 @@ class DMDConverter:
             if self.video_meta:
                 span = max(0.0, self.video_trim_end.get() - self.video_trim_start.get())
             n_frames = max(1, round(fps * span)) if span > 0 and fps > 0 else 0
-            frames_label = f"{n_frames} (estimé)"
+            frames_label = tr("t_frames_estimated", "{n} (estimé)", n=n_frames)
 
         loop_mode = self.manual_loop_mode.get()
         loop_label = (
-            "Infinie"
+            tr("t_loop_infinite", "Infinie")
             if loop_mode == "infini"
             else f"{self.manual_loop_count.get()}x ({loop_mode})"
         )
 
-        info = (
-            f"Dimensions: 128 x 32 px\n"
-            f"FPS: {fps}\n"
-            f"Frames: {frames_label}\n"
-            f"Couleurs: {self.color_count_var.get()}\n"
-            f"Boucle: {loop_label}\n"
-            f"Poids estimé: {self.video_gif_size_var.get()}\n"
+        info = tr(
+            "t_video_gif_info", K_DEFAULT_VIDEO_GIF_INFO,
+            fps=fps, frames=frames_label, colors=self.color_count_var.get(),
+            loop=loop_label, size=self.video_gif_size_var.get(),
         )
         self.video_gif_info_text.config(state="normal")
         self.video_gif_info_text.delete(1.0, tk.END)
@@ -4503,8 +4540,8 @@ class DMDConverter:
             )
             return
         path = filedialog.askopenfilename(
-            title="Sélectionner une vidéo",
-            filetypes=[("Vidéos", "*.mp4 *.avi *.mov *.mkv")],
+            title=tr("t_select_video", "Sélectionner une vidéo"),
+            filetypes=[(tr("t_videos", "Vidéos"), "*.mp4 *.avi *.mov *.mkv")],
         )
         if path:
             self._video_load_from_path(path)
@@ -4693,8 +4730,8 @@ class DMDConverter:
         )
         span = max(0.0, self.video_trim_end.get() - self.video_trim_start.get())
         self.video_trim_label_var.set(
-            f"Durée: {span:.1f}s ({self.video_trim_start.get():.1f}s → "
-            f"{self.video_trim_end.get():.1f}s)"
+            tr("t_trim_duration", "Durée : {span:.1f}s ({start:.1f}s → {end:.1f}s)",
+               span=span, start=self.video_trim_start.get(), end=self.video_trim_end.get())
         )
         self._video_redraw_trim_triangles()
         self._video_redraw_roi_time_indicator()
@@ -5951,7 +5988,7 @@ class DMDConverter:
                 raise RuntimeError("Plage de trim invalide (durée nulle)")
             fps = self.video_fps.get()
 
-            self.root.after(0, lambda: self.update_progress(0, "Extraction des frames..."))
+            self.root.after(0, lambda: self.update_progress(0, tr("t_extracting_frames", "Extraction des frames...")))
             timestamps = VideoEngine.sample_frame_timestamps(
                 start, end, self.video_meta["fps"], fps
             )
@@ -5979,7 +6016,7 @@ class DMDConverter:
             )
             if events:
                 self.root.after(
-                    0, lambda: self.update_progress(30, "Cadrage de la zone d'intérêt...")
+                    0, lambda: self.update_progress(30, tr("t_framing_roi", "Cadrage de la zone d'intérêt..."))
                 )
                 # Zoom keyframé dans le temps si ≥2 points de zoom existent
                 # (interpolation linéaire sur tous les timestamps
@@ -6005,7 +6042,7 @@ class DMDConverter:
                     [src_frames[i] for i in sample_idxs]
                 )
 
-            self.root.after(0, lambda: self.update_progress(60, "Rendu DMD..."))
+            self.root.after(0, lambda: self.update_progress(60, tr("t_dmd_render", "Rendu DMD...")))
             pixel_perfect = self._get_force_pixel_perfect()
             out_frames = []
             for i, frame in enumerate(src_frames):
@@ -6031,11 +6068,11 @@ class DMDConverter:
                 canvas_frame = DMDEngine.cleanup_dmd_frame(canvas_frame, power=0.5)
                 out_frames.append(canvas_frame)
                 pct = 60 + int(30 * (i + 1) / len(src_frames))
-                self.root.after(0, lambda p=pct: self.update_progress(p, "Rendu DMD..."))
+                self.root.after(0, lambda p=pct: self.update_progress(p, tr("t_dmd_render", "Rendu DMD...")))
 
             self.video_frames = out_frames
 
-            self.root.after(0, lambda: self.update_progress(95, "Estimation du poids..."))
+            self.root.after(0, lambda: self.update_progress(95, tr("t_estimating_size", "Estimation du poids...")))
             try:
                 size_bytes = estimate_gif_size(
                     out_frames,
@@ -6073,8 +6110,8 @@ class DMDConverter:
             self.video_processing = False
 
     def _video_pipeline_done(self, size_str="—"):
-        self.update_progress(100, "Aperçu prêt")
-        self.video_status.set(f"{len(self.video_frames)} frames générées")
+        self.update_progress(100, tr("t_preview_ready", "Aperçu prêt"))
+        self.video_status.set(tr("t_frames_generated", "{n} frames générées", n=len(self.video_frames)))
         self.video_gif_size_var.set(size_str)
         # self.video_frames n'est pas une tk.Variable (pas de trace possible)
         # : rafraîchi explicitement ici pour que "Frames"/"Poids estimé"
@@ -6708,7 +6745,7 @@ class DMDConverter:
             logger.error(f"Aide: {readme_text}")
 
         if getattr(self, "help_title_label", None):
-            self.help_title_label.config(text=f"AIDE ({readme_path.name})")
+            self.help_title_label.config(text=tr("t_help_title", "AIDE ({name})", name=readme_path.name))
 
         md_renderer.render_markdown_in_text(
             self.help_text,
@@ -7308,18 +7345,11 @@ class DMDConverter:
         palette = DMDEngine.detect_palette(img, max_colors=8)
         palette_str = ", ".join([f"RGB{c}" for c in palette[:3]]) + "..."
 
-        info = f"""Fichier: {Path(image_path).name}
-Format: {img.format}
-Dimensions: {img.size[0]} x {img.size[1]} px
-Mode: {img.mode}
-Taille: {file_size:.1f} KB
-
-Palette dominante:
-{palette_str}
-
-Ratio: {img.size[0]/img.size[1]:.2f}
-Cible DMD: 4.0 (128/32)
-"""
+        info = tr(
+            "t_image_info", K_DEFAULT_IMAGE_INFO,
+            name=Path(image_path).name, fmt=img.format, w=img.size[0], h=img.size[1],
+            mode=img.mode, size=file_size, palette=palette_str, ratio=img.size[0] / img.size[1],
+        )
 
         self.info_text.config(state="normal")
         self.info_text.delete(1.0, tk.END)
@@ -7335,7 +7365,7 @@ Cible DMD: 4.0 (128/32)
         Choix des 3 premières basé sur 2 critères : occupation de l'affichage et
         lisibilité (voir dmd_pipeline_quality.score_variant)."""
         try:
-            self.ia_status_var.set("🔍 Analyse en cours...")
+            self.ia_status_var.set(tr("t_analyzing", "🔍 Analyse en cours..."))
             self.root.update()
 
             # Afficher original et infos
@@ -7345,7 +7375,7 @@ Cible DMD: 4.0 (128/32)
             img = DMDEngine.crop_to_visible_content(DMDEngine.load_image(image_path))
             analysis = {"size": img.size}
 
-            self.ia_status_var.set("🤖 Évaluation resize vs fill...")
+            self.ia_status_var.set(tr("t_eval_resize_fill", "🤖 Évaluation resize vs fill..."))
             self.root.update()
 
             force_pixel_perfect = self._get_force_pixel_perfect()
@@ -7367,7 +7397,7 @@ Cible DMD: 4.0 (128/32)
             )
             fill_settings = {**fill_settings, "name": "Fill (scrolling)"}
 
-            self.ia_status_var.set("🧹 Optimisation nettoyage / pixel-perfect...")
+            self.ia_status_var.set(tr("t_optimizing", "🧹 Optimisation nettoyage / pixel-perfect..."))
             self.root.update()
 
             # Si le mode Resize (fit) va réduire le texte source sous un seuil de
@@ -7399,7 +7429,7 @@ Cible DMD: 4.0 (128/32)
                 )
             )
 
-            self.ia_status_var.set("🎨 Génération propositions artistiques...")
+            self.ia_status_var.set(tr("t_generating_artistic", "🎨 Génération propositions artistiques..."))
             self.root.update()
 
             # Les propositions artistiques partent de la proposition au score le plus
@@ -7438,7 +7468,7 @@ Cible DMD: 4.0 (128/32)
             # Réinitialiser tous les emplacements de proposition
             for j in range(len(self.proposal_canvases)):
                 self.proposal_canvases[j].delete("all")
-                self.proposal_labels[j].config(text=f"Proposition {j+1}")
+                self.proposal_labels[j].config(text=tr("t_proposal_n", "Proposition {n}", n=j + 1))
                 self.proposal_info_labels[j].config(text="")
 
             for i, (score, variant, canvas) in enumerate(self.proposals):
@@ -7456,24 +7486,27 @@ Cible DMD: 4.0 (128/32)
                 # Afficher infos paramètres détaillées
                 info_text = f"Score: {score_text}\n"
                 if variant.get("_artistic_effect"):
-                    info_text += (
-                        f"Effet: {variant['_artistic_effect']} | "
-                        f"Mode resize: {variant['resize_mode']}\n"
-                    )
-                    info_text += (
-                        f"FPS: {variant['fps']} | Durée: {variant.get('duration', 2.0)}s"
+                    info_text += tr(
+                        "t_prop_info_artistic", "Effet : {effect} | Mode resize : {resize}\nFPS : {fps} | Durée : {dur}s",
+                        effect=variant["_artistic_effect"], resize=variant["resize_mode"],
+                        fps=variant["fps"], dur=variant.get("duration", 2.0),
                     )
                 else:
-                    info_text += f"Contraste: {variant['contrast']:.2f} | Saturation: {variant['saturation']:.2f}\n"
-                    info_text += f"Luminosité: {variant.get('brightness', 1.0):.2f} | Seuil noir: {variant['black_threshold']}\n"
-                    info_text += f"Nettoyage: {variant.get('cleanup_power', 1.0):.1f}"
-                    if variant.get("_pixel_perfect"):
-                        info_text += " | Pixel-perfect: activé"
-                    info_text += "\n"
-                    info_text += (
-                        f"FPS: {variant['fps']} | Vitesse: {variant['scroll_speed']}\n"
+                    info_text += tr(
+                        "t_prop_info_tuning",
+                        "Contraste : {c:.2f} | Saturation : {s:.2f}\nLuminosité : {b:.2f} | Seuil noir : {bt}\nNettoyage : {cl:.1f}",
+                        c=variant["contrast"], s=variant["saturation"], b=variant.get("brightness", 1.0),
+                        bt=variant["black_threshold"], cl=variant.get("cleanup_power", 1.0),
                     )
-                    info_text += f"Mode resize: {variant['resize_mode']} | Direction: {variant['direction']}"
+                    if variant.get("_pixel_perfect"):
+                        info_text += tr("t_prop_info_pp", " | Pixel-perfect : activé")
+                    info_text += "\n"
+                    info_text += tr(
+                        "t_prop_info_motion",
+                        "FPS : {fps} | Vitesse : {speed}\nMode resize : {resize} | Direction : {dir}",
+                        fps=variant["fps"], speed=variant["scroll_speed"],
+                        resize=variant["resize_mode"], dir=variant["direction"],
+                    )
                 self.proposal_info_labels[i].config(text=info_text)
 
             # Sélectionner par défaut la proposition optimisée (la plus aboutie)
@@ -7498,7 +7531,7 @@ Cible DMD: 4.0 (128/32)
             logger.info(f"Analyse terminée: {Path(image_path).name}")
 
         except Exception as e:
-            self.ia_status_var.set(f"❌ Erreur: {str(e)}")
+            self.ia_status_var.set(tr("t_error_msg", "❌ Erreur : {err}", err=e))
             logger.error(f"Erreur analyse: {e}")
 
     def generate_settings_variants(self, analysis, resize_mode):
@@ -7798,7 +7831,7 @@ Cible DMD: 4.0 (128/32)
         current_effect = self.proposals[idx][1].get("_artistic_effect")
         new_effect = self._pick_random_artistic_effect(exclude={current_effect})
 
-        self.ia_status_var.set(f"🎨 Nouvelle proposition artistique: {new_effect}...")
+        self.ia_status_var.set(tr("t_new_artistic_running", "🎨 Nouvelle proposition artistique : {name}...", name=new_effect))
         self.root.update()
 
         settings, canvas = self._generate_artistic_proposal(
@@ -7812,17 +7845,17 @@ Cible DMD: 4.0 (128/32)
         self.proposal_canvases[idx].create_image(192, 48, image=photo)
         self.proposal_canvases[idx].image = photo
         self.proposal_labels[idx].config(text=f"{idx+1}. {settings['name']}")
-        info_text = (
-            f"Score: —\nEffet: {settings['_artistic_effect']} | "
-            f"Mode resize: {settings['resize_mode']}\n"
-            f"FPS: {settings['fps']} | Durée: {settings.get('duration', 2.0)}s"
+        info_text = tr(
+            "t_prop_info_new", "Score : —\nEffet : {effect} | Mode resize : {resize}\nFPS : {fps} | Durée : {dur}s",
+            effect=settings["_artistic_effect"], resize=settings["resize_mode"],
+            fps=settings["fps"], dur=settings.get("duration", 2.0),
         )
         self.proposal_info_labels[idx].config(text=info_text)
 
         if self.selected_proposal == idx and self.current_image_idx is not None:
             self.select_proposal(idx)
 
-        self.ia_status_var.set(f"✓ Nouvelle proposition artistique: {settings['name']}")
+        self.ia_status_var.set(tr("t_new_artistic_done", "✓ Nouvelle proposition artistique : {name}", name=settings["name"]))
 
     def start_continuous_preview(self, image_path, settings):
         """Lance la preview animée continue"""
@@ -7851,7 +7884,7 @@ Cible DMD: 4.0 (128/32)
             self.current_fps = fps
             self.root.after(0, self.animate_preview)
         except Exception as e:
-            self.ia_status_var.set(f"❌ Erreur preview: {str(e)}")
+            self.ia_status_var.set(tr("t_preview_error", "❌ Erreur aperçu : {err}", err=e))
             logger.error(f"Erreur preview: {e}")
 
     def animate_preview(self):
@@ -7940,11 +7973,11 @@ Cible DMD: 4.0 (128/32)
                 if i != idx:
                     lock.set(False)
             self.locked_proposal = idx
-            self.ia_status_var.set(f"🔒 Proposition {idx+1} verrouillée pour batch")
+            self.ia_status_var.set(tr("t_proposal_locked", "🔒 Proposition {n} verrouillée pour le lot", n=idx + 1))
             logger.info(f"Proposition {idx+1} verrouillée")
         else:
             self.locked_proposal = None
-            self.ia_status_var.set("🔓 Déverrouillé")
+            self.ia_status_var.set(tr("t_unlocked", "🔓 Déverrouillé"))
             logger.info("Déverrouillé")
 
     def batch_params_snapshot(self):
@@ -7996,7 +8029,7 @@ Cible DMD: 4.0 (128/32)
     def process_images(self, image_list):
         """Traite un lot d'images"""
         logger.info("process_images démarré")
-        output_dir = filedialog.askdirectory(title="Dossier de sortie")
+        output_dir = filedialog.askdirectory(title=tr("t_output_folder", "Dossier de sortie"))
         if not output_dir:
             return
 
@@ -8083,12 +8116,13 @@ Cible DMD: 4.0 (128/32)
         input_dir_str = str(input_dir)
         output_dir_str = str(output_dir)
 
-        # Défaut modeste (pas d'auto-max agressif) : chaque worker garde en
-        # mémoire une animation complète + l'image source pleine résolution +
-        # le cache resize_cache (Tier 0) — pas de preuve chiffrée dans ce repo
-        # sur la taille réelle des lots utilisateur, mieux vaut ne pas saturer
-        # la RAM sur un très gros lot.
-        max_workers = max(1, min(4, os.cpu_count() or 1))
+        # v84 -- nombre de workers mesuré (2026-09-24, 480 images mame/S, 20
+        # cpu logiques) : ~85 Mo de RAM par worker ; débit 4 → 12 workers
+        # ×1,9, 12 → 16 seulement +6 % (saturation). Règle : cpu logiques - 2
+        # (garde de la marge pour l'interface et le système), plafonnée à 12,
+        # jamais moins que l'ancien défaut min(4, cpu).
+        cpu = os.cpu_count() or 1
+        max_workers = max(min(4, cpu), min(12, cpu - 2), 1)
 
         pool = ProcessPoolExecutor(max_workers=max_workers)
         futures = {
@@ -8133,7 +8167,7 @@ Cible DMD: 4.0 (128/32)
             # comportement assumé vs l'ancien arrêt strict avant la prochaine
             # image (plan perf batch, Tier 2).
             pool.shutdown(wait=True, cancel_futures=True)
-            self.root.after(0, lambda: self.progress_text_var.set("Interrompu"))
+            self.root.after(0, lambda: self.progress_text_var.set(tr("t_interrupted", "Interrompu")))
             logger.info("Batch interrompu par l'utilisateur")
             return
 
@@ -8149,7 +8183,7 @@ Cible DMD: 4.0 (128/32)
     def cancel_processing(self):
         """Interrompt le traitement en cours"""
         self.processing_canceled = True
-        self.progress_text_var.set("Interrompre demandé...")
+        self.progress_text_var.set(tr("t_stop_requested", "Interruption demandée..."))
         logger.info("Interruption demandée")
 
     def process_all(self):
@@ -8200,7 +8234,7 @@ Cible DMD: 4.0 (128/32)
         self.manual_sharpness.set(1.0)
 
         self.display_manual_image()
-        self.manual_status.set(f"Image: {Path(img_path).name}")
+        self.manual_status.set(tr("t_image_name", "Image : {name}", name=Path(img_path).name))
         logger.info(f"Image chargée en manuel: {Path(img_path).name}")
 
     def load_manual_image(self):
@@ -8220,7 +8254,7 @@ Cible DMD: 4.0 (128/32)
             self.manual_sharpness.set(1.0)
 
             self.display_manual_image()
-            self.manual_status.set(f"Image: {Path(file_path).name}")
+            self.manual_status.set(tr("t_image_name", "Image : {name}", name=Path(file_path).name))
             logger.info(f"Image chargée: {Path(file_path).name}")
 
     def display_manual_image(self):
@@ -8338,7 +8372,7 @@ Cible DMD: 4.0 (128/32)
             self.manual_history_index -= 1
             self.manual_image = self.manual_history[self.manual_history_index].copy()
             self.display_manual_image()
-            self.manual_status.set("Annulation effectuée")
+            self.manual_status.set(tr("t_undo_done", "Annulation effectuée"))
             logger.info("Annulation")
         else:
             messagebox.showinfo(
@@ -8351,7 +8385,7 @@ Cible DMD: 4.0 (128/32)
             self.manual_history_index += 1
             self.manual_image = self.manual_history[self.manual_history_index].copy()
             self.display_manual_image()
-            self.manual_status.set("Rétablissement effectué")
+            self.manual_status.set(tr("t_redo_done", "Rétablissement effectué"))
             logger.info("Rétablissement (redo)")
         else:
             messagebox.showinfo(
@@ -8364,15 +8398,15 @@ Cible DMD: 4.0 (128/32)
         self.eraser_mode = False
 
         if self.fill_mode:
-            self.fill_btn.config(text="🎨 Remplissage (ACTIF)")
-            self.eraser_btn.config(text="🧹 Gomme Magique")
+            self.fill_btn.config(text=tr("fill_active", "🎨 Remplissage (ACTIF)"))
+            self.eraser_btn.config(text=tr("eraser", "🧹 Gomme Magique"))
             self.manual_canvas.config(cursor="crosshair")
-            self.manual_status.set("Mode remplissage actif - Cliquez sur une zone")
+            self.manual_status.set(tr("t_fill_on", "Mode remplissage actif - Cliquez sur une zone"))
             logger.info("Remplissage ON")
         else:
-            self.fill_btn.config(text="🎨 Remplissage")
+            self.fill_btn.config(text=tr("fill", "🎨 Remplissage"))
             self.manual_canvas.config(cursor="arrow")
-            self.manual_status.set("Mode remplissage OFF")
+            self.manual_status.set(tr("t_fill_off", "Mode remplissage désactivé"))
             logger.info("Remplissage OFF")
 
     def toggle_eraser_mode(self):
@@ -8381,21 +8415,21 @@ Cible DMD: 4.0 (128/32)
         self.fill_mode = False
 
         if self.eraser_mode:
-            self.eraser_btn.config(text="🧹 Gomme Magique (ACTIF)")
-            self.fill_btn.config(text="🎨 Remplissage")
+            self.eraser_btn.config(text=tr("eraser_active", "🧹 Gomme Magique (ACTIF)"))
+            self.fill_btn.config(text=tr("fill", "🎨 Remplissage"))
             self.manual_canvas.config(cursor="crosshair")
-            self.manual_status.set("Gomme magique active - Cliquez pour effacer")
+            self.manual_status.set(tr("t_eraser_on", "Gomme magique active - Cliquez pour effacer"))
             logger.info("Gomme magique ON")
         else:
-            self.eraser_btn.config(text="🧹 Gomme Magique")
+            self.eraser_btn.config(text=tr("eraser", "🧹 Gomme Magique"))
             self.manual_canvas.config(cursor="arrow")
-            self.manual_status.set("Gomme magique OFF")
+            self.manual_status.set(tr("t_eraser_off", "Gomme magique désactivée"))
             logger.info("Gomme magique OFF")
 
     def choose_fill_color(self):
         """Choisit la couleur de remplissage"""
         color = colorchooser.askcolor(
-            title="Couleur remplissage", initialcolor=self.fill_color
+            title=tr("t_fill_color", "Couleur de remplissage"), initialcolor=self.fill_color
         )
         if color[0]:
             self.fill_color = tuple(int(c) for c in color[0])
@@ -8471,7 +8505,7 @@ Cible DMD: 4.0 (128/32)
         self.manual_image = Image.fromarray(arr)
         self._manual_commit_history()
         self.display_manual_image()
-        self.manual_status.set(f"Remplissage: {int(visited.sum())} pixels")
+        self.manual_status.set(tr("t_filled_px", "Remplissage : {n} pixels", n=int(visited.sum())))
         logger.info(f"Remplissage: {int(visited.sum())} pixels")
 
     def magic_eraser(self, x, y):
@@ -8494,7 +8528,7 @@ Cible DMD: 4.0 (128/32)
         self.manual_image = Image.fromarray(arr)
         self._manual_commit_history()
         self.display_manual_image()
-        self.manual_status.set(f"Gomme: {erased} pixels effacés")
+        self.manual_status.set(tr("t_erased_px", "Gomme : {n} pixels effacés", n=erased))
         logger.info(f"Gomme magique: {erased} pixels")
 
     @staticmethod
@@ -8829,12 +8863,12 @@ Cible DMD: 4.0 (128/32)
     def restore_text_placeholder(self, event):
         """Restaure le placeholder si vide"""
         if not self.text_input.get(1.0, tk.END).strip():
-            self.text_input.insert(1.0, "Votre texte ici...")
+            self.text_input.insert(1.0, lang_manager.get("your_text_here", "Votre texte ici..."))
 
     def choose_text_color(self):
         """Choisit la couleur du texte"""
         color = colorchooser.askcolor(
-            title="Couleur texte", initialcolor=self.text_color
+            title=tr("t_text_color", "Couleur du texte"), initialcolor=self.text_color
         )
         if color[0]:
             self.text_color = tuple(int(c) for c in color[0])
@@ -8845,7 +8879,7 @@ Cible DMD: 4.0 (128/32)
     def choose_text_bg(self):
         """Choisit la couleur de fond"""
         color = colorchooser.askcolor(
-            title="Couleur fond", initialcolor=self.text_bg_color
+            title=tr("t_bg_color", "Couleur du fond"), initialcolor=self.text_bg_color
         )
         if color[0]:
             self.text_bg_color = tuple(int(c) for c in color[0])
@@ -8932,10 +8966,10 @@ Cible DMD: 4.0 (128/32)
             estimated_size = total_frames * 128 * 32 * 3 / 1024  # Estimation grossière
 
             self.text_preview_status.set(
-                f"Animation: {total_frames} frames @ {fps} FPS"
+                tr("t_text_anim_status", "Animation : {frames} frames @ {fps} FPS", frames=total_frames, fps=fps)
             )
             self.text_gif_info.set(
-                f"Durée: {duration:.1f}s | Taille estimée: {estimated_size:.1f} KB"
+                tr("t_text_gif_info", "Durée : {dur:.1f}s | Taille estimée : {size:.1f} KB", dur=duration, size=estimated_size)
             )
 
             self.root.after(0, self.animate_text_preview)
@@ -9109,7 +9143,7 @@ Cible DMD: 4.0 (128/32)
         if not self.manual_image:
             self.manual_info_text.config(state="normal")
             self.manual_info_text.delete(1.0, tk.END)
-            self.manual_info_text.insert(1.0, "Aucune image chargée")
+            self.manual_info_text.insert(1.0, tr("t_no_image_loaded", "Aucune image chargée"))
             self.manual_info_text.config(state="disabled")
             return
 
@@ -9138,19 +9172,13 @@ Cible DMD: 4.0 (128/32)
         ratio = w / h if h > 0 else 0
         target_ratio = 128 / 32
         ratio_diff = abs(ratio - target_ratio)
-        ratio_status = "✓ Optimal" if ratio_diff < 0.5 else "⚠ Ajuster"
+        ratio_status = tr("t_ratio_ok", "✓ Optimal") if ratio_diff < 0.5 else tr("t_ratio_adjust", "⚠ Ajuster")
 
-        info = f"""Dimensions: {w} × {h} px
-Mode couleur: {mode}
-Mémoire: {mem_kb:.1f} KB
-Ratio: {ratio:.2f} (cible: 4.0)
-Status: {ratio_status}
-
-Palette dominante:
-{palette_str}
-
-Historique: {len(self.manual_history)} états (position {self.manual_history_index + 1}/{len(self.manual_history)})
-"""
+        info = tr(
+            "t_manual_info", K_DEFAULT_MANUAL_INFO,
+            w=w, h=h, mode=mode, mem=mem_kb, ratio=ratio, status=ratio_status, palette=palette_str,
+            count=len(self.manual_history), pos=self.manual_history_index + 1,
+        )
 
         self.manual_info_text.config(state="normal")
         self.manual_info_text.delete(1.0, tk.END)
@@ -9192,8 +9220,8 @@ Historique: {len(self.manual_history)} états (position {self.manual_history_ind
         if self.crop_mode:
             self.fill_mode = False
             self.eraser_mode = False
-            self.fill_btn.config(text="🎨 Remplissage")
-            self.eraser_btn.config(text="🧹 Gomme Magique")
+            self.fill_btn.config(text=tr("fill", "🎨 Remplissage"))
+            self.eraser_btn.config(text=tr("eraser", "🧹 Gomme Magique"))
 
             self.manual_canvas.config(cursor="crosshair")
             self.manual_canvas.unbind("<Button-1>")
@@ -9213,7 +9241,7 @@ Historique: {len(self.manual_history)} états (position {self.manual_history_ind
             if self.crop_preview_rect:
                 self.manual_canvas.delete(self.crop_preview_rect)
                 self.crop_preview_rect = None
-            self.manual_status.set("Crop mode OFF")
+            self.manual_status.set(tr("t_crop_off", "Recadrage désactivé"))
             logger.info("Crop mode OFF")
 
     def on_crop_start(self, event):
@@ -9291,7 +9319,7 @@ Historique: {len(self.manual_history)} états (position {self.manual_history_ind
         self.manual_canvas.config(cursor="arrow")
         self.manual_canvas.bind("<Button-1>", self.on_manual_click)
 
-        self.manual_status.set(f"Crop appliqué: {x2-x1}×{y2-y1}px")
+        self.manual_status.set(tr("t_crop_applied", "Recadrage appliqué : {w}×{h}px", w=x2 - x1, h=y2 - y1))
         logger.info(f"Crop: {x2-x1}×{y2-y1}")
 
     # ========================================================================
@@ -9325,7 +9353,7 @@ Historique: {len(self.manual_history)} états (position {self.manual_history_ind
     def load_multiple_manual_images(self):
         """Charge plusieurs images pour morphing"""
         files = filedialog.askopenfilenames(
-            title="Sélectionner images pour morphing",
+            title=tr("t_select_morph_images", "Sélectionner des images pour le morphing"),
             filetypes=[("Images", "*.png *.jpg *.jpeg *.bmp *.gif *.raw565")],
         )
 
@@ -9361,14 +9389,14 @@ Historique: {len(self.manual_history)} états (position {self.manual_history_ind
             self.manual_image = self.multi_images[idx].copy()
             self.manual_original = self.manual_image.copy()
             self.display_manual_image()
-            self.manual_status.set(f"Image {idx+1}/{len(self.multi_images)}")
+            self.manual_status.set(tr("t_image_n_of", "Image {n}/{total}", n=idx + 1, total=len(self.multi_images)))
 
     def clear_multi_images(self):
         """Efface la liste multi-images"""
         self.multi_images = []
         self.multi_images_listbox.delete(0, tk.END)
         self.multi_images_frame.pack_forget()
-        self.manual_status.set("Liste multi-images effacée")
+        self.manual_status.set(tr("t_multi_cleared", "Liste multi-images effacée"))
         logger.info("Multi-images effacées")
 
     def generate_morphing_animation(self):
@@ -9380,7 +9408,7 @@ Historique: {len(self.manual_history)} états (position {self.manual_history_ind
             )
             return
 
-        self.manual_status.set("Génération morphing...")
+        self.manual_status.set(tr("t_morph_running", "Génération du morphing..."))
         self.root.update()
 
         try:
@@ -9437,9 +9465,10 @@ Historique: {len(self.manual_history)} états (position {self.manual_history_ind
             self.animate_manual_preview()
 
             self.manual_preview_status.set(
-                f"Morphing: {len(self.manual_frames)} frames, {len(self.multi_images)} images"
+                tr("t_morph_status", "Morphing : {frames} frames, {images} images",
+                   frames=len(self.manual_frames), images=len(self.multi_images))
             )
-            self.manual_status.set("Morphing généré !")
+            self.manual_status.set(tr("t_morph_done", "Morphing généré !"))
             logger.info(f"Morphing: {len(self.manual_frames)} frames")
 
         except Exception as e:
@@ -9448,7 +9477,7 @@ Historique: {len(self.manual_history)} états (position {self.manual_history_ind
                 f"{lang_manager.get('err_morphing_generation', 'Erreur génération morphing')}:\n{e}",
             )
             logger.error(f"Erreur morphing: {e}")
-            self.manual_status.set("Erreur morphing")
+            self.manual_status.set(tr("t_morph_error", "Erreur morphing"))
 
     def _build_font_registry(self):
         """Cache famille→fichier via registre Windows"""
@@ -9695,7 +9724,7 @@ Historique: {len(self.manual_history)} états (position {self.manual_history_ind
             return ["Arial", "Times New Roman", "Courier New"]
 
     def update_progress(self, percent, filename):
-        self.progress_text_var.set(f"Traitement {percent}% : {filename}")
+        self.progress_text_var.set(tr("t_batch_progress", "Traitement {pct}% : {name}", pct=percent, name=filename))
         self.progress_bar_var.set(percent)
         if hasattr(self, "progressbar"):
             self.progressbar.update_idletasks()
@@ -9708,7 +9737,7 @@ Historique: {len(self.manual_history)} états (position {self.manual_history_ind
         errors = errors or []
         error_count = len(errors)
 
-        self.progress_text_var.set(f"Terminé : {success_count}/{total} GIF créés")
+        self.progress_text_var.set(tr("t_batch_done", "Terminé : {ok}/{total} GIF créés", ok=success_count, total=total))
         self.progress_bar_var.set(0)
 
         if error_count:
@@ -9972,6 +10001,10 @@ def process_one_image(
             loop_count=loop_count,
             disposal=2,
             optimize=False,
+            # v84 -- une palette pour toute l'animation (frames issues de la
+            # meme image source) : encodage ~x19 plus rapide, voir
+            # dmd_gif_exporter.py v3
+            shared_palette=True,
         )
         return (image_path, True, None, output_name, len(frames), color_count)
     except Exception as e:

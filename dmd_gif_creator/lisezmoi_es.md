@@ -164,8 +164,9 @@ Para cada imagen se calculan y muestran 6 renders en miniatura:
   de carpetas de las imágenes de origen (respecto a la carpeta cargada) se recrea
   dentro de la carpeta de salida. Al terminar, un mensaje ofrece abrir directamente
   la carpeta de salida.
-- Las imágenes se procesan **en paralelo** (hasta 4 a la vez según el número de
-  núcleos del procesador): un lote termina mucho más rápido que imagen por imagen.
+- Las imágenes se procesan **en paralelo**, usando casi todos los núcleos del
+  procesador (hasta 12 imágenes a la vez): un lote termina mucho más rápido que
+  imagen por imagen.
 
 ---
 

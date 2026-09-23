@@ -24,3 +24,8 @@ Release 3 -->   v3.0 -- + renommage : DMD GIF Converter -> DMD GIF Creator
                         + historique annuler/retablir incremental dans MANUEL, controles avances branches
                         + infobulles d aide, traductions revues
                         - nombreuses corrections (flood fill, recadrage, apercus, sauvegarde de reglages...)
+                v3.0.1 -- + traitement par lot ~2,4x plus rapide : jusqu a 12 workers (coeurs - 2)
+                            et une palette commune pour l encodage GIF du lot
+                          + traductions EN/ES completees : ~60 textes (messages d etat, panneaux
+                            d information, titres des propositions, fenetres de choix, aide, trim video)
+                          - version affichee 3.0.1, lanceur dmd_gif_creator_v301.py

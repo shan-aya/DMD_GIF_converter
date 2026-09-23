@@ -1,6 +1,6 @@
 [🇫🇷 Français](./README.md) · [🇬🇧 English](./README_EN.md) · 🇪🇸 **Español**
 
-DMD GIF Creator 128x32 - v3.0
+DMD GIF Creator 128x32 - v3.0.1
 Shan_ayA 2026
 
 Aplicación completa para crear GIF optimizados para pantallas DMD 128x32: a partir de
@@ -8,6 +8,15 @@ imágenes (análisis automático y propuestas), de un vídeo o de texto animado,
 edición manual avanzada.
 
 (Antes « DMD GIF Converter ».)
+
+## Novedades de la v3.0.1
+
+- **Procesamiento por lotes unas 2,4 veces más rápido**: hasta 12 imágenes procesadas
+  en paralelo según el procesador, y codificación GIF acelerada (una paleta para toda
+  la animación).
+- **Traducción más completa**: los mensajes de estado, paneles de información, títulos
+  de las propuestas y ventanas de selección siguen ahora el idioma elegido (inglés o
+  español).
 
 ## Novedades de la v3.0
 
@@ -30,14 +39,14 @@ Detalle (en francés): [CHANGELOG_FR](./CHANGELOG_FR)
 
 ## Instalación
 
-**Windows**: descargue `dmd_gif_creator_v300.exe` desde la
+**Windows**: descargue `dmd_gif_creator_v301.exe` desde la
 [última Release](https://github.com/shan-aya/DMD_GIF_converter/releases/latest) y
 ejecútelo — no hace falta instalar nada.
 
 **Desde las fuentes** (carpeta [`dmd_gif_creator/`](./dmd_gif_creator)):
 
     pip install pillow numpy tkinterdnd2 markdown opencv-contrib-python
-    python dmd_gif_creator/dmd_gif_creator_v300.py
+    python dmd_gif_creator/dmd_gif_creator_v301.py
 
 `opencv-contrib-python` (y no `opencv-python`) es necesario para el seguimiento
 automático de la pestaña VIDEO; los dos paquetes no deben instalarse a la vez.

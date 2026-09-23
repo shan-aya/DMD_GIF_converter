@@ -152,8 +152,9 @@ Pour chaque image, 6 rendus sont calculés et affichés en miniature :
 - Un dossier de sortie est demandé au premier lancement ; l'arborescence relative des
   images sources (par rapport au dossier chargé) est reconstruite dans le dossier de
   sortie. À la fin, un message propose d'ouvrir directement le dossier de sortie.
-- Les images sont traitées **en parallèle** (jusqu'à 4 à la fois selon le nombre de
-  cœurs du processeur) : un lot se termine nettement plus vite qu'image par image.
+- Les images sont traitées **en parallèle**, en utilisant presque tous les cœurs du
+  processeur (jusqu'à 12 images à la fois) : un lot se termine nettement plus vite
+  qu'image par image.
 
 ---
 
