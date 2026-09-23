@@ -8,14 +8,11 @@ describes, tab by tab, every function of the interface and how to use it.
 > **2.7.4**, dark theme, interface set to English: the VIDEO and HELP tabs, added
 > since, are not shown.
 >
-> **Localization note:** translation coverage is not 100% yet. A handful of labels
-> remain hardcoded in French regardless of the selected language — the drag-and-drop
-> hint, the "Réautoriser"/"Vider" buttons in the image list, the content of the
-> "Image Information" panels (field names like `Fichier:`/`Format:`/`Mode couleur:`),
-> the GIF size estimate text in TEXTSCROLL, and a few proposal-caption words such as
-> "adapté" or "score". You'll see these exact French words in the screenshots below —
-> this is a known, tracked limitation (see `TODO_optimisation.md`), not a translation
-> error in this guide.
+> **Localization note:** a few labels and information panels (for example the field
+> names of the "Image Information" and "Source Video" panels, such as `Fichier:` or
+> `Résolution:`) can still appear in French whatever the selected language, as can
+> the messages of the DEBUG tab. The screenshots below, taken with an older version,
+> show some French words for the same reason.
 
 ---
 

@@ -1,3 +1,4 @@
+🇫🇷 **Français** · [🇬🇧 English](./README_EN.md) · [🇪🇸 Español](./README_ES.md)
 
 DMD GIF Creator 128x32 - v3.0
 Shan_ayA 2026

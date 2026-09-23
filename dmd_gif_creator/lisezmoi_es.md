@@ -9,15 +9,12 @@ concreto.
 > **2.7.4**, tema oscuro, interfaz en español: las pestañas VIDEO y AYUDA, añadidas
 > después, no aparecen.
 >
-> **Nota sobre la localización:** la traducción aún no cubre el 100% de la interfaz.
-> Algunas etiquetas permanecen fijas en francés sin importar el idioma seleccionado —
-> el texto de arrastrar y soltar, los botones "Réautoriser"/"Vider" en la lista de
-> imágenes, el contenido de los paneles "Información de la Imagen" (nombres de campo
-> como `Fichier:`/`Format:`/`Mode couleur:`), el texto de tamaño estimado del GIF en
-> TEXTSCROLL, y algunas palabras de los subtítulos de propuestas como "adapté" o
-> "score". Verá exactamente esas palabras en francés en las capturas de abajo — es
-> una limitación conocida y registrada (ver `TODO_optimisation.md`), no un error de
-> esta guía traducida.
+> **Nota sobre la localización:** algunas etiquetas y paneles de información (por
+> ejemplo los nombres de campo de los paneles "Información de la Imagen" y "Vídeo de
+> origen", como `Fichier:` o `Résolution:`) pueden aparecer todavía en francés sea
+> cual sea el idioma elegido, igual que los mensajes de la pestaña DEBUG. Las capturas
+> de abajo, hechas con una versión anterior, muestran algunas palabras en francés por
+> el mismo motivo.
 
 ---
 
