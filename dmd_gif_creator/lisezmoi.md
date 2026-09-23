@@ -53,7 +53,7 @@ l'interface.
 
 ## Onglet AUTO — analyse et propositions IA
 
-![Onglet AUTO](dmd_gif_creator/images/onglet_auto.png)
+![Onglet AUTO](images/onglet_auto.png)
 
 C'est l'onglet le plus complet : chargement en masse, analyse automatique de
 lisibilité/occupation, et génération de 6 propositions de rendu par image.
@@ -159,7 +159,7 @@ Pour chaque image, 6 rendus sont calculés et affichés en miniature :
 
 ## Onglet MANUEL — édition avancée
 
-![Onglet MANUEL](dmd_gif_creator/images/onglet_manuel.png)
+![Onglet MANUEL](images/onglet_manuel.png)
 
 Contrôle total, sans aucune automatisation de lisibilité : c'est vous qui choisissez
 chaque effet et chaque paramètre d'animation.
@@ -329,7 +329,7 @@ En mode **✋ Manuel** :
 
 ## Onglet TEXTSCROLL — texte animé
 
-![Onglet TEXTSCROLL](dmd_gif_creator/images/onglet_textscroll.png)
+![Onglet TEXTSCROLL](images/onglet_textscroll.png)
 
 Génère une animation directement à partir de texte saisi, sans image source.
 
@@ -376,7 +376,7 @@ chargement de fichier, donc aucun souci de transparence/PNG ici).
 
 ## Onglet PARAMÈTRES
 
-![Onglet PARAMÈTRES](dmd_gif_creator/images/onglet_parametres.png)
+![Onglet PARAMÈTRES](images/onglet_parametres.png)
 
 Réglages globaux de l'application (pas liés à une image ou un projet particulier) :
 
@@ -393,7 +393,7 @@ Réglages globaux de l'application (pas liés à une image ou un projet particul
 
 ## Onglet DEBUG
 
-![Onglet DEBUG](dmd_gif_creator/images/onglet_debug.png)
+![Onglet DEBUG](images/onglet_debug.png)
 
 Journal d'activité de l'application en temps réel — utile pour diagnostiquer une
 erreur ou comprendre ce que fait l'IA en arrière-plan.

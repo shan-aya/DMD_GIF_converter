@@ -9,3 +9,18 @@ Release 2 -->   v2   -- + multilangue
                         + versionnalisation du programme
                         + rajout du rafraichissement des FONTS utilisateurs a chaque lancement
                         - correction d un probleme de config.json non sauvegardé
+Release 3 -->   v3.0 -- + renommage : DMD GIF Converter -> DMD GIF Creator
+                        + onglet VIDEO : GIF a partir d une video (selection du passage, suivi automatique,
+                          cadrage auto ou points manuels zone/zoom dans le temps, qualite automatique)
+                        + onglet AIDE : guide complet FR/EN/ES dans l application
+                        + glisser-deposer d images, de dossiers ou d une video sur toute la fenetre
+                        + apercu LED (loupe, luminosite LED) dans AUTO, MANUEL, VIDEO et TEXTSCROLL
+                        + mode AUTO revu : 6 propositions dont 3 artistiques, seuil de lettrage,
+                          verrouillage d une proposition pour le lot
+                        + traitement par lot en parallele (jusqu a 4 images a la fois)
+                        + gros dossiers (dizaines de milliers d images) charges en quelques secondes
+                          en arriere-plan, sans figer la fenetre
+                        + format raw565 accepte en entree
+                        + historique annuler/retablir incremental dans MANUEL, controles avances branches
+                        + infobulles d aide, traductions revues
+                        - nombreuses corrections (flood fill, recadrage, apercus, sauvegarde de reglages...)

@@ -62,7 +62,7 @@ emergente** en el idioma de la interfaz.
 
 ## Pestaña AUTO — análisis y propuestas de IA
 
-![Pestaña AUTO](dmd_gif_creator/images/auto_es.png)
+![Pestaña AUTO](images/auto_es.png)
 
 Es la pestaña más completa: carga masiva, análisis automático de
 legibilidad/ocupación, y generación de 6 propuestas de render por imagen.
@@ -174,7 +174,7 @@ Para cada imagen se calculan y muestran 6 renders en miniatura:
 
 ## Pestaña MANUAL — edición avanzada
 
-![Pestaña MANUAL](dmd_gif_creator/images/manual_es.png)
+![Pestaña MANUAL](images/manual_es.png)
 
 Control total, sin ningún automatismo de legibilidad: usted elige cada efecto y cada
 parámetro de animación.
@@ -352,7 +352,7 @@ conservará.
 
 ## Pestaña TEXTSCROLL — texto animado
 
-![Pestaña TEXTSCROLL](dmd_gif_creator/images/textscroll_es.png)
+![Pestaña TEXTSCROLL](images/textscroll_es.png)
 
 Genera una animación directamente a partir de texto escrito, sin necesidad de imagen
 de origen.
@@ -402,7 +402,7 @@ DMD (no se carga ningún archivo, así que no hay problemas de transparencia/PNG
 
 ## Pestaña AJUSTES
 
-![Pestaña AJUSTES](dmd_gif_creator/images/settings_es.png)
+![Pestaña AJUSTES](images/settings_es.png)
 
 Ajustes globales de la aplicación (no ligados a ninguna imagen o proyecto en
 particular):
@@ -420,7 +420,7 @@ particular):
 
 ## Pestaña DEBUG
 
-![Pestaña DEBUG](dmd_gif_creator/images/debug_es.png)
+![Pestaña DEBUG](images/debug_es.png)
 
 Registro de actividad de la aplicación en tiempo real — útil para diagnosticar un
 error o entender qué está haciendo la IA internamente.

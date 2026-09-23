@@ -59,7 +59,7 @@ easing, video framing modes...) shows a **help tooltip** in the interface langua
 
 ## AUTO tab — AI analysis and proposals
 
-![AUTO tab](dmd_gif_creator/images/auto_en.png)
+![AUTO tab](images/auto_en.png)
 
 This is the most complete tab: bulk loading, automatic readability/coverage
 analysis, and 6 render proposals generated per image.
@@ -163,7 +163,7 @@ For each image, 6 renders are computed and shown as thumbnails:
 
 ## MANUAL tab — advanced editing
 
-![MANUAL tab](dmd_gif_creator/images/manual_en.png)
+![MANUAL tab](images/manual_en.png)
 
 Full control, with no readability automation whatsoever: you choose every effect and
 every animation parameter yourself.
@@ -329,7 +329,7 @@ In **✋ Manual** mode:
 
 ## TEXTSCROLL tab — animated text
 
-![TEXTSCROLL tab](dmd_gif_creator/images/textscroll_en.png)
+![TEXTSCROLL tab](images/textscroll_en.png)
 
 Generates an animation directly from typed text, with no source image needed.
 
@@ -377,7 +377,7 @@ loading, so no transparency/PNG concerns here).
 
 ## SETTINGS tab
 
-![SETTINGS tab](dmd_gif_creator/images/settings_en.png)
+![SETTINGS tab](images/settings_en.png)
 
 Global application settings (not tied to any particular image or project):
 
@@ -394,7 +394,7 @@ Global application settings (not tied to any particular image or project):
 
 ## DEBUG tab
 
-![DEBUG tab](dmd_gif_creator/images/debug_en.png)
+![DEBUG tab](images/debug_en.png)
 
 Real-time application activity log — useful for diagnosing an error or understanding
 what the AI is doing behind the scenes.
