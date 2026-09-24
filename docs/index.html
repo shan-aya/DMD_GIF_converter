@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DMD GIF Creator</title>
+<meta name="description" content="DMD GIF Creator — créez des GIF optimisés pour les écrans DMD 128×32 à partir d'images, d'une vidéo ou de texte animé. Windows, gratuit, FR/EN/ES.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ctext y='13' font-size='14'%3E%F0%9F%8E%9E%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  :root{color-scheme:dark;}
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  img{max-width:100%;}
+
+  :root{
+    --ink:#0a0d12;
+    --panel:#11161e;
+    --line:#212b38;
+    --led-red:#ff3b3b;
+    --led-blue:#4a8cff;
+    --led-green:#3ee06a;
+    --led-white:#eef1f5;
+    --amber:#ffb238;
+    --muted:#7c8aa0;
+    --muted-dim:#4d5866;
+  }
+
+  body{
+    background:var(--ink);
+    color:var(--led-white);
+    font-family:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:1;
+    background:repeating-linear-gradient(to bottom, rgba(255,255,255,0.018) 0px, rgba(255,255,255,0.018) 1px, transparent 1px, transparent 3px);
+    mix-blend-mode:screen;
+  }
+
+  .page{ position:relative; max-width:640px; margin:0 auto; padding-inline:20px; padding-block:0 44px; }
+
+  .utilitybar{ position:relative; z-index:2; display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:10px; padding-top:18px; }
+  .gh{
+    display:inline-flex; align-items:center; gap:7px;
+    font-family:"JetBrains Mono",monospace; font-size:11px; letter-spacing:0.05em; text-transform:uppercase;
+    color:var(--muted); text-decoration:none; border:1px solid var(--line); padding:6px 11px; border-radius:3px;
+    transition:color .15s, border-color .15s;
+  }
+  .gh:hover{ color:var(--led-white); border-color:var(--muted-dim); }
+
+  .langswitch{ display:flex; gap:4px; }
+  .langswitch button{
+    font-family:"JetBrains Mono",monospace; font-size:11px; letter-spacing:0.05em; text-transform:uppercase;
+    background:transparent; border:1px solid var(--line); color:var(--muted);
+    padding:6px 10px; border-radius:3px; cursor:pointer; transition:color .15s, border-color .15s, background .15s;
+  }
+  .langswitch button:hover{ color:var(--led-white); border-color:var(--muted-dim); }
+  .langswitch button:focus-visible{ outline:2px solid var(--led-blue); outline-offset:2px; }
+  .langswitch button[aria-pressed="true"]{ color:var(--ink); background:var(--led-white); border-color:var(--led-white); }
+
+  .eyebrow{
+    font-family:"JetBrains Mono",monospace; font-size:12px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+    display:inline-flex; align-items:center; gap:8px; padding:5px 10px 4px; border-radius:3px; border:1px solid var(--line);
+  }
+  .eyebrow::before{ content:""; width:6px; height:6px; border-radius:1px; background:currentColor; box-shadow:0 0 6px currentColor; }
+  h1,h2{ font-weight:400; }
+  h2{
+    font-family:"Anton",system-ui,sans-serif; letter-spacing:0.01em; text-wrap:balance; line-height:1.02;
+    margin:14px 0 10px; font-size:clamp(28px,6.6vw,38px);
+  }
+  p{ margin:0; color:#c3cbd8; line-height:1.55; font-size:15.5px; max-width:56ch; }
+  strong{color:var(--led-white); font-weight:700;}
+  .num{font-variant-numeric:tabular-nums;}
+
+  .cta{
+    display:inline-flex; align-items:center; gap:8px; margin-top:20px; padding:13px 24px; border-radius:8px;
+    background:var(--led-blue); color:var(--ink); font-weight:800; font-size:15px; text-decoration:none;
+    box-shadow:0 0 0 1px rgba(74,140,255,.3), 0 0 28px -6px rgba(74,140,255,.55);
+    transition:transform .15s, box-shadow .15s;
+  }
+  .cta:hover{ transform:translateY(-1px); box-shadow:0 0 0 1px rgba(74,140,255,.4), 0 0 34px -4px rgba(74,140,255,.7); }
+  .cta:focus-visible{ outline:2px solid var(--led-white); outline-offset:3px; }
+  .ctarow{ display:flex; flex-wrap:wrap; justify-content:center; align-items:stretch; gap:12px; margin:20px auto 0; max-width:560px; }
+  .ctarow .cta{ margin-top:0; flex:1 1 250px; justify-content:center; min-height:64px; text-align:center; }
+  .cta-secondary{ background:var(--led-green); box-shadow:0 0 0 1px rgba(62,224,106,.3), 0 0 28px -6px rgba(62,224,106,.55); }
+  .cta-secondary:hover{ box-shadow:0 0 0 1px rgba(62,224,106,.4), 0 0 34px -4px rgba(62,224,106,.7); }
+  .cta-secondary svg{ width:16px; height:16px; fill:currentColor; }
+  .cta-stack{ flex-direction:column; gap:3px; }
+  .cta-date{ font-family:"JetBrains Mono",monospace; font-size:10.5px; font-weight:400; letter-spacing:0.03em; opacity:.85; white-space:nowrap; }
+  .req{ font-family:"JetBrains Mono",monospace; font-size:11px; letter-spacing:0.03em; color:var(--muted-dim); margin:12px auto 0; max-width:none; }
+
+  .shot{
+    margin:20px 0 0; border-radius:8px; overflow:hidden; border:1px solid var(--line);
+    box-shadow:0 10px 28px -16px rgba(0,0,0,0.8); background:#000;
+  }
+  .shot img{ display:block; width:100%; height:auto; }
+  .shot a{ display:block; }
+  .shot.glow-r{ box-shadow:0 0 0 1px rgba(255,59,59,.3), 0 0 32px -8px rgba(255,59,59,.45), 0 10px 28px -16px rgba(0,0,0,.8); }
+  .shot.glow-b{ box-shadow:0 0 0 1px rgba(74,140,255,.3), 0 0 32px -8px rgba(74,140,255,.45), 0 10px 28px -16px rgba(0,0,0,.8); }
+  .shot.glow-g{ box-shadow:0 0 0 1px rgba(62,224,106,.3), 0 0 32px -8px rgba(62,224,106,.45), 0 10px 28px -16px rgba(0,0,0,.8); }
+  .shot.glow-a{ box-shadow:0 0 0 1px rgba(255,178,56,.3), 0 0 32px -8px rgba(255,178,56,.45), 0 10px 28px -16px rgba(0,0,0,.8); }
+  .shot.glow-w{ box-shadow:0 0 0 1px rgba(238,241,245,.22), 0 0 26px -8px rgba(238,241,245,.3), 0 10px 28px -16px rgba(0,0,0,.8); }
+  figure.shot figcaption{
+    font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:0.05em; text-transform:uppercase;
+    color:var(--muted); padding:7px 9px 8px; border-top:1px solid var(--line); background:var(--panel);
+  }
+
+  /* GIF 128x32 agrandis sans flou, comme sur le panneau */
+  .dmd img{ image-rendering:pixelated; image-rendering:crisp-edges; aspect-ratio:4/1; }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:20px; align-items:start; }
+  .grid2 .shot{ margin-top:0; }
+
+  .cap{
+    font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--muted-dim); text-align:center; margin-top:10px; max-width:none;
+  }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+  .chip{
+    font-family:"JetBrains Mono",monospace; font-size:11px; letter-spacing:0.05em; text-transform:uppercase;
+    padding:5px 10px; border:1px solid var(--line); border-radius:3px; color:var(--muted);
+  }
+  .stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:20px; }
+  .stat{ border:1px solid var(--line); border-radius:8px; padding:14px 12px; background:var(--panel); }
+  .stat b{ display:block; font-family:"Anton",system-ui,sans-serif; font-weight:400; font-size:28px; color:var(--amber); font-variant-numeric:tabular-nums; }
+  .stat span{ display:block; margin-top:4px; font-size:12.5px; line-height:1.4; color:var(--muted); }
+
+  header.hero{ position:relative; z-index:2; padding-block:26px 26px; text-align:center; }
+  header.hero .brand{ font-family:"JetBrains Mono",monospace; font-size:12px; letter-spacing:0.32em; color:var(--muted); text-transform:uppercase; }
+  header.hero h1{ font-family:"Anton",system-ui,sans-serif; font-size:clamp(40px,11vw,60px); line-height:0.95; margin:8px 0 10px; text-wrap:balance; }
+  header.hero h1 .v{ color:var(--ink); -webkit-text-stroke:1.5px var(--led-white); }
+  header.hero .tag{ color:var(--muted); font-size:15px; margin:0 auto; max-width:44ch; }
+
+  .divider{
+    display:flex; align-items:center; gap:12px; color:var(--muted-dim);
+    font-family:"JetBrains Mono",monospace; font-size:11px; letter-spacing:0.2em; text-transform:uppercase;
+    padding:0 0 22px; text-align:center;
+  }
+  .divider::before,.divider::after{ content:""; flex:1; height:1px; background:var(--line); }
+  .divider.pivot{ padding-top:36px; }
+
+  .feat{ position:relative; z-index:2; padding-block:36px; border-top:1px solid var(--line); }
+  .feat:nth-of-type(even){ background:linear-gradient(180deg, transparent, rgba(255,255,255,0.014) 40%, transparent); }
+  .feat p a, .credit a{ color:var(--led-blue); text-decoration:none; border-bottom:1px solid rgba(74,140,255,.35); }
+  .feat p a:hover{ border-bottom-color:var(--led-blue); }
+
+  footer.outro{ position:relative; z-index:2; text-align:center; padding-block:40px 8px; border-top:1px solid var(--line); }
+  footer.outro .word{ font-family:"Anton",system-ui,sans-serif; font-size:clamp(24px,6vw,30px); color:var(--led-white); }
+  footer.outro .word span{ color:var(--muted-dim); }
+  footer.outro p{ margin:10px auto 0; color:var(--muted); font-size:13.5px; max-width:44ch; }
+
+  @media (max-width:520px){
+    .stat{ padding:12px 9px; }
+    .stat b{ font-size:22px; }
+  }
+  @media (max-width:420px){
+    .grid2{ grid-template-columns:1fr; }
+    .stats{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="utilitybar">
+    <div class="langswitch" role="group" aria-label="Langue">
+      <button type="button" data-lang="fr" aria-pressed="true">FR</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      <button type="button" data-lang="es" aria-pressed="false">ES</button>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="brand" data-i18n="brand">Écran DMD 128×32 · Création de GIF</div>
+    <h1>DMD GIF <span class="v">Creator</span></h1>
+    <p class="tag" data-i18n="tag">Transformez images, logos, vidéos et textes en GIF taillés pour un écran DMD 128×32 — borne d'arcade, flipper, RecalBox DMD. L'application analyse, propose, et convertit des dossiers entiers en une fois.</p>
+    <div class="ctarow">
+      <a class="cta cta-stack" data-dl href="https://github.com/shan-aya/DMD_GIF_converter/releases/latest"><span data-i18n="dl.label">⬇ Télécharger pour Windows</span><small class="cta-date" data-reldate hidden></small></a>
+      <a class="cta cta-secondary" href="https://github.com/shan-aya/DMD_GIF_converter" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg><span data-i18n="gh.label">Sources et notice</span></a>
+    </div>
+    <p class="req" data-i18n="req">Windows · exécutable autonome, rien à installer · gratuit</p>
+    <figure class="shot glow-w" style="margin-top:24px;">
+      <a data-shot-link="auto" href="media/auto_fr.png"><img data-shot="auto" src="media/auto_fr.png" data-i18n-alt="alt.auto" alt="Onglet AUTO : liste d'images, aperçu DMD et six propositions IA."></a>
+    </figure>
+  </header>
+
+  <div class="divider" data-i18n="divider1">Quatre façons de créer</div>
+
+  <section class="feat">
+    <span class="eyebrow" style="color:var(--led-blue)" data-i18n="s1.eyebrow">Auto</span>
+    <h2 data-i18n="s1.h2">Une image, six propositions</h2>
+    <p data-i18n="s1.p">Déposez un logo : l'application recadre, teste la version redimensionnée et la version qui défile, garde la plus lisible, et ajoute trois variantes artistiques. L'aperçu LED montre le rendu réel du panneau avant d'exporter.</p>
+    <div class="grid2">
+      <figure class="shot glow-b dmd"><img src="media/logo-pacman.gif" alt="Pac-Man"></figure>
+      <figure class="shot glow-b dmd"><img src="media/logo-sf2.gif" alt="Street Fighter II"></figure>
+      <figure class="shot glow-b dmd"><img src="media/logo-dkong.gif" alt="Donkey Kong"></figure>
+      <figure class="shot glow-b dmd"><img src="media/logo-sonic.gif" alt="Sonic &amp; Knuckles"></figure>
+      <figure class="shot glow-b dmd"><img src="media/logo-outrun.gif" alt="Out Run"></figure>
+      <figure class="shot glow-b dmd"><img src="media/logo-mk.gif" alt="Mortal Kombat"></figure>
+    </div>
+    <p class="cap" data-i18n="cap.logos">GIF 128×32 produits par l'application, affichés à l'échelle du pixel</p>
+  </section>
+
+  <section class="feat">
+    <span class="eyebrow" style="color:var(--amber)" data-i18n="s2.eyebrow">Traitement par lot</span>
+    <h2 data-i18n="s2.h2">Des milliers d'images d'un coup</h2>
+    <p data-i18n="s2.p">Choisissez un dossier entier — les logos de toute une ludothèque par exemple — et lancez le lot. Les images sont traitées en parallèle, l'arborescence des dossiers est conservée en sortie, et les fichiers source ne sont jamais modifiés.</p>
+    <div class="stats">
+      <div class="stat"><b class="num">12</b><span data-i18n="stat.workers">images traitées en parallèle</span></div>
+      <div class="stat"><b class="num" data-i18n="stat.x">×2,4</b><span data-i18n="stat.speed">plus rapide qu'en v3.0</span></div>
+      <div class="stat"><b class="num" data-i18n="stat.n">55 000</b><span data-i18n="stat.folder">images chargées sans figer la fenêtre</span></div>
+    </div>
+  </section>
+
+  <section class="feat">
+    <span class="eyebrow" style="color:var(--led-green)" data-i18n="s3.eyebrow">Manuel</span>
+    <h2 data-i18n="s3.h2">La main sur chaque pixel</h2>
+    <p data-i18n="s3.p">Recadrage 128×32, luminosité, contraste, netteté, filtres, pot de peinture et gomme magique, animations avec easing et boucle, multi-images et morphing — avec annuler/rétablir à chaque étape.</p>
+    <figure class="shot glow-g">
+      <a data-shot-link="manual" href="media/manual_fr.png"><img data-shot="manual" src="media/manual_fr.png" data-i18n-alt="alt.manual" alt="Onglet MANUEL : effets, filtres, outils de dessin et aperçu de l'animation."></a>
+    </figure>
+  </section>
+
+  <section class="feat">
+    <span class="eyebrow" style="color:var(--led-red)" data-i18n="s4.eyebrow">Vidéo</span>
+    <h2 data-i18n="s4.h2">Un passage de vidéo, en GIF DMD</h2>
+    <p data-i18n="s4.p">Choisissez le passage sur la frise, puis le cadrage : suivi automatique d'un sujet, cadrage auto avec zoom, ou points manuels qui déplacent la zone au fil du temps. La qualité automatique ajuste les couleurs d'après la vidéo et le poids du GIF s'affiche en direct.</p>
+    <figure class="shot glow-r dmd">
+      <img src="media/demo-video.gif" data-i18n-alt="alt.demovideo" alt="GIF 128×32 produit depuis une vidéo filmée du panneau DMD.">
+      <figcaption data-i18n="cap.demovideo">Résultat : 14 s de vidéo → GIF 128×32</figcaption>
+    </figure>
+    <figure class="shot glow-r" style="margin-top:14px;">
+      <a data-shot-link="video" href="media/video_fr.png"><img data-shot="video" src="media/video_fr.png" data-i18n-alt="alt.video" alt="Onglet VIDEO : frise de sélection, cadrage et aperçu."></a>
+    </figure>
+  </section>
+
+  <section class="feat">
+    <span class="eyebrow" style="color:var(--led-blue)" data-i18n="s5.eyebrow">Textscroll</span>
+    <h2 data-i18n="s5.h2">Du texte qui bouge</h2>
+    <p data-i18n="s5.p">Tapez un message, choisissez police, couleurs et effet — arc-en-ciel, néon, feu, métal… — puis l'animation : défilement, vague, Star Wars, machine à écrire, pluie Matrix, glitch. La durée s'ajuste toute seule à la longueur du texte.</p>
+    <figure class="shot glow-b dmd">
+      <img src="media/demo-text.gif" data-i18n-alt="alt.demotext" alt="Texte arc-en-ciel défilant sur 128×32.">
+    </figure>
+    <figure class="shot glow-b" style="margin-top:14px;">
+      <a data-shot-link="textscroll" href="media/textscroll_fr.png"><img data-shot="textscroll" src="media/textscroll_fr.png" data-i18n-alt="alt.textscroll" alt="Onglet TEXTSCROLL : texte, police, effets et animation."></a>
+    </figure>
+    <div class="chips">
+      <span class="chip">scroll</span><span class="chip">wave</span><span class="chip">starwars</span><span class="chip">typewriter</span><span class="chip">matrix</span><span class="chip">glitch</span><span class="chip">explode</span><span class="chip">spiral</span>
+    </div>
+  </section>
+
+  <div class="divider pivot" data-i18n="divider2">Pensé pour les écrans DMD</div>
+
+  <section class="feat">
+    <span class="eyebrow" style="color:var(--led-white)" data-i18n="s6.eyebrow">RecalBox DMD</span>
+    <h2 data-i18n="s6.h2">Le compagnon du panneau RecalBox DMD</h2>
+    <p data-i18n="s6.p">Les GIF sortent au format exact attendu par le panneau <a href="https://shan-aya.github.io/RecalBoxDMD/" target="_blank" rel="noopener">RecalBox DMD</a> : 128×32, palette réduite, poids maîtrisé. Glissez-les ensuite dans sa playlist ou sur sa carte SD.</p>
+    <div class="chips">
+      <span class="chip">PNG</span><span class="chip">JPG</span><span class="chip">BMP</span><span class="chip">GIF</span><span class="chip">raw565</span><span class="chip">MP4</span><span class="chip">MOV</span><span class="chip">MKV</span><span class="chip">AVI</span>
+    </div>
+  </section>
+
+  <footer class="outro">
+    <div class="word">DMD GIF <span>Creator</span></div>
+    <p data-i18n="footer.p1">Interface et notice disponibles en français, anglais et espagnol.</p>
+    <div class="ctarow" style="margin-top:20px;">
+      <a class="cta cta-stack" data-dl href="https://github.com/shan-aya/DMD_GIF_converter/releases/latest"><span data-i18n="dl.label">⬇ Télécharger pour Windows</span><small class="cta-date" data-reldate hidden></small></a>
+      <a class="cta cta-secondary" href="https://github.com/shan-aya/DMD_GIF_converter" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg><span data-i18n="gh.label">Sources et notice</span></a>
+    </div>
+    <p style="margin-top:22px;">© 2026 Shan_ayA</p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var translations = {
+    fr: {
+      "brand": "Écran DMD 128×32 · Création de GIF",
+      "tag": "Transformez images, logos, vidéos et textes en GIF taillés pour un écran DMD 128×32 — borne d'arcade, flipper, RecalBox DMD. L'application analyse, propose, et convertit des dossiers entiers en une fois.",
+      "dl.label": "⬇ Télécharger pour Windows",
+      "rel.label": "Version",
+      "gh.label": "Sources et notice",
+      "req": "Windows · exécutable autonome, rien à installer · gratuit",
+      "alt.auto": "Onglet AUTO : liste d'images, aperçu DMD et six propositions IA.",
+      "divider1": "Quatre façons de créer",
+      "s1.eyebrow": "Auto",
+      "s1.h2": "Une image, six propositions",
+      "s1.p": "Déposez un logo : l'application recadre, teste la version redimensionnée et la version qui défile, garde la plus lisible, et ajoute trois variantes artistiques. L'aperçu LED montre le rendu réel du panneau avant d'exporter.",
+      "cap.logos": "GIF 128×32 produits par l'application, affichés à l'échelle du pixel",
+      "s2.eyebrow": "Traitement par lot",
+      "s2.h2": "Des milliers d'images d'un coup",
+      "s2.p": "Choisissez un dossier entier — les logos de toute une ludothèque par exemple — et lancez le lot. Les images sont traitées en parallèle, l'arborescence des dossiers est conservée en sortie, et les fichiers source ne sont jamais modifiés.",
+      "stat.workers": "images traitées en parallèle", "stat.x": "×2,4", "stat.n": "55 000",
+      "stat.speed": "plus rapide qu'en v3.0",
+      "stat.folder": "images chargées sans figer la fenêtre",
+      "s3.eyebrow": "Manuel",
+      "s3.h2": "La main sur chaque pixel",
+      "s3.p": "Recadrage 128×32, luminosité, contraste, netteté, filtres, pot de peinture et gomme magique, animations avec easing et boucle, multi-images et morphing — avec annuler/rétablir à chaque étape.",
+      "alt.manual": "Onglet MANUEL : effets, filtres, outils de dessin et aperçu de l'animation.",
+      "s4.eyebrow": "Vidéo",
+      "s4.h2": "Un passage de vidéo, en GIF DMD",
+      "s4.p": "Choisissez le passage sur la frise, puis le cadrage : suivi automatique d'un sujet, cadrage auto avec zoom, ou points manuels qui déplacent la zone au fil du temps. La qualité automatique ajuste les couleurs d'après la vidéo et le poids du GIF s'affiche en direct.",
+      "alt.demovideo": "GIF 128×32 produit depuis une vidéo filmée du panneau DMD.",
+      "cap.demovideo": "Résultat : 14 s de vidéo → GIF 128×32",
+      "alt.video": "Onglet VIDEO : frise de sélection, cadrage et aperçu.",
+      "s5.eyebrow": "Textscroll",
+      "s5.h2": "Du texte qui bouge",
+      "s5.p": "Tapez un message, choisissez police, couleurs et effet — arc-en-ciel, néon, feu, métal… — puis l'animation : défilement, vague, Star Wars, machine à écrire, pluie Matrix, glitch. La durée s'ajuste toute seule à la longueur du texte.",
+      "alt.demotext": "Texte arc-en-ciel défilant sur 128×32.",
+      "alt.textscroll": "Onglet TEXTSCROLL : texte, police, effets et animation.",
+      "divider2": "Pensé pour les écrans DMD",
+      "s6.eyebrow": "RecalBox DMD",
+      "s6.h2": "Le compagnon du panneau RecalBox DMD",
+      "s6.p": "Les GIF sortent au format exact attendu par le panneau <a href=\"https://shan-aya.github.io/RecalBoxDMD/\" target=\"_blank\" rel=\"noopener\">RecalBox DMD</a> : 128×32, palette réduite, poids maîtrisé. Glissez-les ensuite dans sa playlist ou sur sa carte SD.",
+      "footer.p1": "Interface et notice disponibles en français, anglais et espagnol."
+    },
+    en: {
+      "brand": "128×32 DMD display · GIF making",
+      "tag": "Turn images, logos, videos and text into GIFs cut for a 128×32 DMD display — arcade cabinet, pinball, RecalBox DMD. The app analyzes, suggests, and converts whole folders in one go.",
+      "dl.label": "⬇ Download for Windows",
+      "rel.label": "Version",
+      "gh.label": "Sources and guide",
+      "req": "Windows · standalone executable, nothing to install · free",
+      "alt.auto": "AUTO tab: image list, DMD preview and six AI proposals.",
+      "divider1": "Four ways to create",
+      "s1.eyebrow": "Auto",
+      "s1.h2": "One image, six proposals",
+      "s1.p": "Drop a logo: the app crops it, tries the resized version and the scrolling one, keeps the most readable, and adds three artistic variants. The LED preview shows the real panel render before you export.",
+      "cap.logos": "128×32 GIFs made by the app, shown pixel-for-pixel",
+      "s2.eyebrow": "Batch processing",
+      "s2.h2": "Thousands of images at once",
+      "s2.p": "Pick a whole folder — the logos of an entire game library, say — and start the batch. Images are processed in parallel, the folder tree is kept in the output, and source files are never modified.",
+      "stat.workers": "images processed in parallel", "stat.x": "×2.4", "stat.n": "55,000",
+      "stat.speed": "faster than v3.0",
+      "stat.folder": "images loaded without freezing the window",
+      "s3.eyebrow": "Manual",
+      "s3.h2": "Your hand on every pixel",
+      "s3.p": "128×32 crop, brightness, contrast, sharpness, filters, fill and magic eraser, animations with easing and looping, multi-images and morphing — with undo/redo at every step.",
+      "alt.manual": "MANUAL tab: effects, filters, drawing tools and animation preview.",
+      "s4.eyebrow": "Video",
+      "s4.h2": "A video clip, as a DMD GIF",
+      "s4.p": "Pick the section on the timeline, then the framing: automatic subject tracking, auto framing with zoom, or manual points that move the area over time. Automatic quality tunes the colors from the video, and the GIF size is shown live.",
+      "alt.demovideo": "128×32 GIF made from a video of the DMD panel.",
+      "cap.demovideo": "Result: 14 s of video → 128×32 GIF",
+      "alt.video": "VIDEO tab: selection timeline, framing and preview.",
+      "s5.eyebrow": "Textscroll",
+      "s5.h2": "Text that moves",
+      "s5.p": "Type a message, pick font, colors and effect — rainbow, neon, fire, metal… — then the animation: scroll, wave, Star Wars, typewriter, Matrix rain, glitch. The duration fits itself to the length of the text.",
+      "alt.demotext": "Rainbow text scrolling on 128×32.",
+      "alt.textscroll": "TEXTSCROLL tab: text, font, effects and animation.",
+      "divider2": "Made for DMD displays",
+      "s6.eyebrow": "RecalBox DMD",
+      "s6.h2": "The companion of the RecalBox DMD panel",
+      "s6.p": "GIFs come out in the exact format the <a href=\"https://shan-aya.github.io/RecalBoxDMD/\" target=\"_blank\" rel=\"noopener\">RecalBox DMD</a> panel expects: 128×32, reduced palette, controlled size. Then drop them into its playlist or onto its SD card.",
+      "footer.p1": "Interface and guide available in French, English and Spanish."
+    },
+    es: {
+      "brand": "Pantalla DMD 128×32 · Creación de GIF",
+      "tag": "Convierte imágenes, logos, vídeos y textos en GIF hechos para una pantalla DMD 128×32 — máquina arcade, pinball, RecalBox DMD. La aplicación analiza, propone y convierte carpetas enteras de una vez.",
+      "dl.label": "⬇ Descargar para Windows",
+      "rel.label": "Versión",
+      "gh.label": "Código y guía",
+      "req": "Windows · ejecutable autónomo, nada que instalar · gratis",
+      "alt.auto": "Pestaña AUTO: lista de imágenes, vista previa DMD y seis propuestas IA.",
+      "divider1": "Cuatro formas de crear",
+      "s1.eyebrow": "Auto",
+      "s1.h2": "Una imagen, seis propuestas",
+      "s1.p": "Suelta un logo: la aplicación lo recorta, prueba la versión redimensionada y la que se desplaza, se queda con la más legible y añade tres variantes artísticas. La vista previa LED muestra el render real del panel antes de exportar.",
+      "cap.logos": "GIF 128×32 creados por la aplicación, mostrados píxel a píxel",
+      "s2.eyebrow": "Procesamiento por lotes",
+      "s2.h2": "Miles de imágenes de una vez",
+      "s2.p": "Elige una carpeta entera — los logos de toda una ludoteca, por ejemplo — y lanza el lote. Las imágenes se procesan en paralelo, el árbol de carpetas se conserva en la salida y los archivos de origen nunca se modifican.",
+      "stat.workers": "imágenes procesadas en paralelo", "stat.x": "×2,4", "stat.n": "55 000",
+      "stat.speed": "más rápido que la v3.0",
+      "stat.folder": "imágenes cargadas sin congelar la ventana",
+      "s3.eyebrow": "Manual",
+      "s3.h2": "Control sobre cada píxel",
+      "s3.p": "Recorte 128×32, brillo, contraste, nitidez, filtros, relleno y goma mágica, animaciones con easing y bucle, multi-imágenes y morphing — con deshacer/rehacer en cada paso.",
+      "alt.manual": "Pestaña MANUAL: efectos, filtros, herramientas de dibujo y vista previa de la animación.",
+      "s4.eyebrow": "Vídeo",
+      "s4.h2": "Un fragmento de vídeo, en GIF DMD",
+      "s4.p": "Elige el fragmento en la línea de tiempo y luego el encuadre: seguimiento automático de un sujeto, encuadre automático con zoom o puntos manuales que mueven la zona con el tiempo. La calidad automática ajusta los colores según el vídeo y el peso del GIF se muestra en directo.",
+      "alt.demovideo": "GIF 128×32 creado a partir de un vídeo del panel DMD.",
+      "cap.demovideo": "Resultado: 14 s de vídeo → GIF 128×32",
+      "alt.video": "Pestaña VIDEO: línea de tiempo, encuadre y vista previa.",
+      "s5.eyebrow": "Textscroll",
+      "s5.h2": "Texto en movimiento",
+      "s5.p": "Escribe un mensaje, elige fuente, colores y efecto — arcoíris, neón, fuego, metal… — y luego la animación: desplazamiento, ola, Star Wars, máquina de escribir, lluvia Matrix, glitch. La duración se ajusta sola a la longitud del texto.",
+      "alt.demotext": "Texto arcoíris desplazándose en 128×32.",
+      "alt.textscroll": "Pestaña TEXTSCROLL: texto, fuente, efectos y animación.",
+      "divider2": "Pensado para pantallas DMD",
+      "s6.eyebrow": "RecalBox DMD",
+      "s6.h2": "El compañero del panel RecalBox DMD",
+      "s6.p": "Los GIF salen en el formato exacto que espera el panel <a href=\"https://shan-aya.github.io/RecalBoxDMD/\" target=\"_blank\" rel=\"noopener\">RecalBox DMD</a>: 128×32, paleta reducida, peso controlado. Después, añádelos a su playlist o a su tarjeta SD.",
+      "footer.p1": "Interfaz y guía disponibles en francés, inglés y español."
+    }
+  };
+
+  var currentLang = "fr";
+  var release = null;
+
+  function renderRelease(){
+    if (!release) return;
+    var localeMap = { fr: "fr-FR", en: "en-GB", es: "es-ES" };
+    var fmt = new Intl.DateTimeFormat(localeMap[currentLang] || "fr-FR", { dateStyle: "long" });
+    var label = translations[currentLang]["rel.label"];
+    var text = label + " " + release.tag.replace(/^v/, "") + " · " + fmt.format(release.date);
+    document.querySelectorAll("[data-reldate]").forEach(function(el){ el.textContent = text; el.hidden = false; });
+    if (release.url) document.querySelectorAll("[data-dl]").forEach(function(a){ a.href = release.url; });
+  }
+
+  function apply(lang){
+    if (!translations[lang]) lang = "fr";
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-i18n]").forEach(function(el){
+      var val = translations[lang][el.getAttribute("data-i18n")];
+      if (val !== undefined) el.innerHTML = val;
+    });
+    document.querySelectorAll("[data-i18n-alt]").forEach(function(el){
+      var val = translations[lang][el.getAttribute("data-i18n-alt")];
+      if (val !== undefined) el.setAttribute("alt", val);
+    });
+    // Captures d'écran de l'application dans la langue choisie
+    document.querySelectorAll("[data-shot]").forEach(function(img){
+      img.src = "media/" + img.getAttribute("data-shot") + "_" + lang + ".png";
+    });
+    document.querySelectorAll("[data-shot-link]").forEach(function(a){
+      a.href = "media/" + a.getAttribute("data-shot-link") + "_" + lang + ".png";
+    });
+    document.querySelectorAll(".langswitch button").forEach(function(b){
+      b.setAttribute("aria-pressed", b.getAttribute("data-lang") === lang ? "true" : "false");
+    });
+    try { localStorage.setItem("dmdgifcreator_lang", lang); } catch(e) {}
+    renderRelease();
+  }
+
+  document.querySelectorAll(".langswitch button").forEach(function(b){
+    b.addEventListener("click", function(){ apply(b.getAttribute("data-lang")); });
+  });
+
+  var saved = null;
+  try { saved = localStorage.getItem("dmdgifcreator_lang"); } catch(e) {}
+  if (!saved) {
+    var nav = (navigator.language || "").slice(0, 2);
+    saved = translations[nav] ? nav : "fr";
+  }
+  apply(saved);
+
+  // Dernière Release : numéro de version, date, et lien direct vers l'exécutable
+  fetch("https://api.github.com/repos/shan-aya/DMD_GIF_converter/releases/latest")
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(data){
+      if (!data || !data.tag_name) return;
+      var exe = (data.assets || []).filter(function(a){ return /\.exe$/i.test(a.name); })[0];
+      release = { tag: data.tag_name, date: new Date(data.published_at), url: exe ? exe.browser_download_url : null };
+      renderRelease();
+    })
+    .catch(function(){});
+})();
+</script>
+
+</body>
+</html>

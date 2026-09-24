@@ -1,42 +1,17 @@
 🇫🇷 **Français** · [🇬🇧 English](./README_EN.md) · [🇪🇸 Español](./README_ES.md)
 
-DMD GIF Creator 128x32 - v3.0.1
-Shan_ayA 2026
+# DMD GIF Creator 128x32 — v3.0.1
 
-Application complète de création de GIF optimisés pour écrans DMD 128x32 : à partir
-d'images (analyse automatique et propositions), d'une vidéo, ou de texte animé, avec
-édition manuelle avancée.
+Créez des GIF optimisés pour les écrans DMD 128×32 (borne d'arcade, flipper,
+[RecalBox DMD](https://github.com/shan-aya/RecalBoxDMD)) à partir d'**images**, d'une
+**vidéo** ou de **texte animé**, avec analyse automatique, édition manuelle avancée et
+traitement par lot de dossiers entiers.
 
 (Anciennement « DMD GIF Converter ».)
 
-## Nouveautés de la v3.0.1
+![Onglet AUTO](./screenshots/auto_fr.png)
 
-- **Traitement par lot environ 2,4 fois plus rapide** : jusqu'à 12 images traitées en
-  parallèle selon le processeur, et encodage GIF accéléré (une palette pour toute
-  l'animation).
-- **Interface traduite plus complètement** : messages d'état, panneaux d'informations,
-  titres des propositions et fenêtres de choix s'affichent désormais en anglais ou en
-  espagnol selon la langue choisie.
-
-## Nouveautés de la v3.0
-
-- **Onglet VIDEO** : un passage de vidéo (MP4, AVI, MOV, MKV) transformé en GIF 128×32,
-  avec sélection du passage, cadrage par suivi automatique, cadrage auto ou points
-  manuels (zone et zoom qui évoluent dans le temps), qualité automatique.
-- **Onglet AIDE** : le guide complet dans l'application, en français, anglais ou
-  espagnol.
-- **Glisser-déposer** d'images, de dossiers ou d'une vidéo n'importe où dans la
-  fenêtre.
-- **Aperçu LED** fidèle au rendu du panneau (loupe, réglage de luminosité) dans tous
-  les onglets de création.
-- **Traitement par lot en parallèle**, et chargement de très gros dossiers (plusieurs
-  dizaines de milliers d'images) en quelques secondes sans figer la fenêtre.
-- Format **raw565** accepté en entrée, historique annuler/rétablir dans l'onglet
-  MANUEL, infobulles d'aide, traductions FR/EN/ES revues.
-
-Détail : [CHANGELOG_FR](./CHANGELOG_FR)
-
-## Installation
+## Téléchargement
 
 **Windows** : téléchargez `dmd_gif_creator_v301.exe` dans la
 [dernière Release](https://github.com/shan-aya/DMD_GIF_converter/releases/latest) et
@@ -51,25 +26,69 @@ lancez-le — aucune installation nécessaire.
 automatique de l'onglet VIDEO ; les deux paquets ne doivent pas être installés en même
 temps.
 
-## Captures (version 2.7)
+## Ce que fait l'application
 
-<img width="1909" height="1079" alt="Capture d&#39;écran 2026-04-29 150630" src="https://github.com/user-attachments/assets/5515fd66-c5e9-4370-939c-48becf656cae" />
-<img width="1909" height="1079" alt="Capture d&#39;écran 2026-04-29 150638" src="https://github.com/user-attachments/assets/c6892979-22fd-4854-8c5b-2cb591af6243" />
-<img width="1909" height="1079" alt="Capture d&#39;écran 2026-04-29 150929" src="https://github.com/user-attachments/assets/bd582c2c-f7c8-48e3-a1a3-f77a23da3d75" />
-<img width="1908" height="1077" alt="Capture d&#39;écran 2026-04-29 150940" src="https://github.com/user-attachments/assets/d43e075e-7286-4e7f-a94e-2866367303f7" />
+### AUTO — une image, six propositions
 
+Glissez-déposez des images ou des dossiers entiers (PNG, JPG, BMP, GIF, raw565).
+Pour chaque image, l'application analyse le contenu et propose six rendus 128×32 :
+redimensionné, défilant, optimisé, et trois variantes artistiques. L'aperçu LED
+reproduit le rendu réel du panneau. Le **traitement par lot** convertit ensuite toute
+la liste en parallèle, en conservant l'arborescence des dossiers, sans jamais modifier
+les fichiers source.
+
+### MANUEL — édition avancée
+
+![Onglet MANUEL](./screenshots/manual_fr.png)
+
+Recadrage 128×32, luminosité, contraste, saturation, netteté, filtres, pot de peinture
+et gomme magique, animations (défilement, zoom, fondu…) avec easing et boucle,
+multi-images et morphing, historique annuler/rétablir.
+
+### VIDEO — un GIF à partir d'une vidéo
+
+![Onglet VIDEO](./screenshots/video_fr.png)
+
+Choisissez un passage d'une vidéo (MP4, AVI, MOV, MKV) sur la frise, puis le cadrage :
+suivi automatique d'un sujet, cadrage auto avec zoom, ou points manuels (zone et zoom
+qui évoluent dans le temps). La qualité automatique ajuste contraste, saturation et
+luminosité d'après la vidéo, et le poids du GIF est estimé en direct.
+
+### TEXTSCROLL — texte animé
+
+![Onglet TEXTSCROLL](./screenshots/textscroll_fr.png)
+
+Police, taille, couleurs, effets de texte et de couleur, et de nombreuses animations
+(défilement horizontal ou vertical, vague, Star Wars, machine à écrire, pluie Matrix,
+glitch…), avec une durée ajustée automatiquement à la longueur du texte.
+
+### Et aussi
+
+- **PARAMETRES** : réglages par défaut, langue (français, anglais, espagnol).
+- **DEBUG** : journal détaillé filtrable.
+- **AIDE** : le guide complet dans l'application.
+
+## Nouveautés
+
+**v3.0.1**
+- Traitement par lot environ **2,4 fois plus rapide** : jusqu'à 12 images en parallèle
+  selon le processeur, et encodage GIF accéléré.
+- Interface traduite plus complètement en anglais et en espagnol.
+
+**v3.0**
+- Onglet **VIDEO**, onglet **AIDE**, **glisser-déposer** partout dans la fenêtre.
+- **Aperçu LED** dans tous les onglets de création.
+- Traitement par lot en parallèle, chargement de dossiers de dizaines de milliers
+  d'images sans figer la fenêtre.
+- Format raw565 en entrée, annuler/rétablir dans MANUEL, infobulles d'aide.
+
+Historique complet : [CHANGELOG_FR](./CHANGELOG_FR)
 
 ## Documentation
 
-Vous pouvez consulter la notice complète ici :
-
-- [Version Française 🇫🇷](./NOTICE_FR.md)  
-- [Versión en Español 🇪🇸](./NOTICE_ES.md)
-- [Version in english EN](./NOTICE_EN.md) 
-
-Cliquez sur la langue souhaitée pour accéder à la documentation correspondante. La
-même notice est disponible dans l'application, onglet **AIDE**.
-
+Notice complète : [🇫🇷 Français](./NOTICE_FR.md) · [🇬🇧 English](./NOTICE_EN.md) ·
+[🇪🇸 Español](./NOTICE_ES.md) — également disponible dans l'application, onglet
+**AIDE**.
 
 ---
 
@@ -81,13 +100,13 @@ même notice est disponible dans l'application, onglet **AIDE**.
 
 ## ☕ Soutenir le projet
 
-Si ce projet t’as aidé, tu peux m’offrir un café :
-
+Si ce projet t'a aidé, tu peux m'offrir un café :
 👉 [☕ Donate via PayPal](https://www.paypal.com/paypalme/felysaya)
 
 ## Contact
 
-Pour toute question, suggestion ou contribution, créez un issue ou contactez l’auteur Shan_ayA.
+Pour toute question, suggestion ou contribution, créez une issue ou contactez l'auteur
+Shan_ayA.
 
 ---
 

@@ -1,39 +1,17 @@
 [🇫🇷 Français](./README.md) · 🇬🇧 **English** · [🇪🇸 Español](./README_ES.md)
 
-DMD GIF Creator 128x32 - v3.0.1
-Shan_ayA 2026
+# DMD GIF Creator 128x32 — v3.0.1
 
-A complete application to create GIFs optimized for 128x32 DMD displays: from images
-(automatic analysis and proposals), from a video, or from animated text, with advanced
-manual editing.
+Create GIFs optimized for 128×32 DMD displays (arcade cabinet, pinball,
+[RecalBox DMD](https://github.com/shan-aya/RecalBoxDMD)) from **images**, a **video**
+or **animated text**, with automatic analysis, advanced manual editing and batch
+processing of whole folders.
 
 (Formerly "DMD GIF Converter".)
 
-## What's new in v3.0.1
+![AUTO tab](./screenshots/auto_en.png)
 
-- **Batch processing about 2.4 times faster**: up to 12 images processed in parallel
-  depending on the CPU, and faster GIF encoding (one palette for the whole
-  animation).
-- **More complete translation**: status messages, information panels, proposal titles
-  and file/color dialogs now follow the chosen language (English or Spanish).
-
-## What's new in v3.0
-
-- **VIDEO tab**: turns a section of a video (MP4, AVI, MOV, MKV) into a 128×32 GIF,
-  with section selection, framing by automatic tracking, auto framing or manual points
-  (area and zoom that change over time), and automatic quality.
-- **HELP tab**: the full guide inside the application, in French, English or Spanish.
-- **Drag and drop** images, folders or a video anywhere on the window.
-- **LED preview** faithful to the panel render (magnifier, LED brightness) in every
-  creation tab.
-- **Parallel batch processing**, and very large folders (tens of thousands of images)
-  loaded in a few seconds without freezing the window.
-- **raw565** format accepted as input, undo/redo history in the MANUAL tab, help
-  tooltips, reviewed FR/EN/ES translations.
-
-Details (in French): [CHANGELOG_FR](./CHANGELOG_FR)
-
-## Installation
+## Download
 
 **Windows**: download `dmd_gif_creator_v301.exe` from the
 [latest Release](https://github.com/shan-aya/DMD_GIF_converter/releases/latest) and run
@@ -47,25 +25,67 @@ it — nothing to install.
 `opencv-contrib-python` (not `opencv-python`) is required for the automatic tracking of
 the VIDEO tab; the two packages must not be installed at the same time.
 
-## Screenshots (version 2.7)
+## What the application does
 
-<img width="1909" height="1079" alt="Screenshot 2026-04-29 150630" src="https://github.com/user-attachments/assets/5515fd66-c5e9-4370-939c-48becf656cae" />
-<img width="1909" height="1079" alt="Screenshot 2026-04-29 150638" src="https://github.com/user-attachments/assets/c6892979-22fd-4854-8c5b-2cb591af6243" />
-<img width="1909" height="1079" alt="Screenshot 2026-04-29 150929" src="https://github.com/user-attachments/assets/bd582c2c-f7c8-48e3-a1a3-f77a23da3d75" />
-<img width="1908" height="1077" alt="Screenshot 2026-04-29 150940" src="https://github.com/user-attachments/assets/d43e075e-7286-4e7f-a94e-2866367303f7" />
+### AUTO — one image, six proposals
 
+Drag and drop images or whole folders (PNG, JPG, BMP, GIF, raw565). For each image,
+the application analyzes the content and offers six 128×32 renders: resized,
+scrolling, optimized, and three artistic variants. The LED preview reproduces the
+real panel render. **Batch processing** then converts the whole list in parallel,
+keeping the folder tree, without ever modifying the source files.
+
+### MANUAL — advanced editing
+
+![MANUAL tab](./screenshots/manual_en.png)
+
+128×32 crop, brightness, contrast, saturation, sharpness, filters, fill and magic
+eraser, animations (scroll, zoom, fade…) with easing and looping, multi-images and
+morphing, undo/redo history.
+
+### VIDEO — a GIF from a video
+
+![VIDEO tab](./screenshots/video_en.png)
+
+Pick a section of a video (MP4, AVI, MOV, MKV) on the timeline, then the framing:
+automatic subject tracking, auto framing with zoom, or manual points (area and zoom
+that change over time). Automatic quality adjusts contrast, saturation and brightness
+from the video, and the GIF size is estimated live.
+
+### TEXTSCROLL — animated text
+
+![TEXTSCROLL tab](./screenshots/textscroll_en.png)
+
+Font, size, colors, text and color effects, and many animations (horizontal or
+vertical scroll, wave, Star Wars, typewriter, Matrix rain, glitch…), with a duration
+fitted automatically to the text length.
+
+### Also
+
+- **SETTINGS**: defaults, language (French, English, Spanish).
+- **DEBUG**: detailed, filterable log.
+- **HELP**: the full guide inside the application.
+
+## What's new
+
+**v3.0.1**
+- Batch processing about **2.4 times faster**: up to 12 images in parallel depending
+  on the CPU, and faster GIF encoding.
+- More complete English and Spanish translation of the interface.
+
+**v3.0**
+- **VIDEO** tab, **HELP** tab, **drag and drop** anywhere on the window.
+- **LED preview** in every creation tab.
+- Parallel batch processing, folders of tens of thousands of images loaded without
+  freezing the window.
+- raw565 input format, undo/redo in MANUAL, help tooltips.
+
+Full history (in French): [CHANGELOG_FR](./CHANGELOG_FR)
 
 ## Documentation
 
-The full user guide is available here:
-
-- [Version Française 🇫🇷](./NOTICE_FR.md)
-- [Versión en Español 🇪🇸](./NOTICE_ES.md)
-- [English version EN](./NOTICE_EN.md)
-
-Click the language of your choice to open the matching guide. The same guide is
-available inside the application, **HELP** tab.
-
+Full user guide: [🇫🇷 Français](./NOTICE_FR.md) · [🇬🇧 English](./NOTICE_EN.md) ·
+[🇪🇸 Español](./NOTICE_ES.md) — also available inside the application, **HELP** tab.
 
 ---
 
@@ -78,12 +98,12 @@ available inside the application, **HELP** tab.
 ## ☕ Support the project
 
 If this project helped you, you can buy me a coffee:
-
 👉 [☕ Donate via PayPal](https://www.paypal.com/paypalme/felysaya)
 
 ## Contact
 
-For any question, suggestion or contribution, open an issue or contact the author Shan_ayA.
+For any question, suggestion or contribution, open an issue or contact the author
+Shan_ayA.
 
 ---
 
