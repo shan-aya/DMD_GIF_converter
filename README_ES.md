@@ -1,6 +1,6 @@
 [🇫🇷 Français](./README.md) · [🇬🇧 English](./README_EN.md) · 🇪🇸 **Español**
 
-# DMD GIF Creator 128x32 — v3.0.1
+# DMD GIF Creator 128x32 — v3.0.2
 
 Cree GIF optimizados para pantallas DMD 128×32 (máquina arcade, pinball,
 [RecalBox DMD](https://github.com/shan-aya/RecalBoxDMD)) a partir de **imágenes**, de
@@ -13,14 +13,14 @@ procesamiento por lotes de carpetas enteras.
 
 ## Descarga
 
-**Windows**: descargue `dmd_gif_creator_v301.exe` desde la
+**Windows**: descargue `dmd_gif_creator_v302.exe` desde la
 [última Release](https://github.com/shan-aya/DMD_GIF_converter/releases/latest) y
 ejecútelo — no hace falta instalar nada.
 
 **Desde las fuentes** (carpeta [`dmd_gif_creator/`](./dmd_gif_creator)):
 
     pip install pillow numpy tkinterdnd2 markdown opencv-contrib-python
-    python dmd_gif_creator/dmd_gif_creator_v301.py
+    python dmd_gif_creator/dmd_gif_creator_v302.py
 
 `opencv-contrib-python` (y no `opencv-python`) es necesario para el seguimiento
 automático de la pestaña VIDEO; los dos paquetes no deben instalarse a la vez.
@@ -30,11 +30,18 @@ automático de la pestaña VIDEO; los dos paquetes no deben instalarse a la vez.
 ### AUTO — una imagen, seis propuestas
 
 Arrastre y suelte imágenes o carpetas enteras (PNG, JPG, BMP, GIF, raw565). Para cada
-imagen, la aplicación analiza el contenido y propone seis renders 128×32:
-redimensionado, con desplazamiento, optimizado y tres variantes artísticas. La vista
-previa LED reproduce el render real del panel. El **procesamiento por lotes** convierte
-después toda la lista en paralelo, conservando el árbol de carpetas y sin modificar
-nunca los archivos de origen.
+imagen, la aplicación calcula dos renders 128×32 — **Resize** (la imagen entera
+reducida) y **Fill** (la imagen más grande, con desplazamiento) — y los puntúa según
+la ocupación de la pantalla y la legibilidad. Se conserva el mejor y luego se afina
+(limpieza, pixel-perfect). **Si el texto queda demasiado pequeño para leerse en
+Resize, se impone Fill**, aunque Resize tenga mejor puntuación. Tres variantes
+artísticas completan las seis propuestas; la vista previa LED (con lupa) muestra el
+render real del panel.
+
+El **procesamiento por lotes** aplica el mismo análisis a cada imagen de una carpeta —
+por ejemplo todos los logos scrapeados de una ludoteca: cada logo recibe el modo de
+render que le conviene, en paralelo, conservando el árbol de carpetas y sin modificar
+nunca los archivos de origen. Una propuesta puede bloquearse para todo el lote.
 
 ### MANUAL — edición avanzada
 
@@ -68,6 +75,10 @@ Matrix, glitch…), con una duración ajustada automáticamente a la longitud de
 - **AYUDA**: la guía completa dentro de la aplicación.
 
 ## Novedades
+
+**v3.0.2**
+- Pestaña AUTO totalmente traducida al inglés y al español (nombres de las
+  propuestas, línea de estado, barra de estado).
 
 **v3.0.1**
 - Procesamiento por lotes unas **2,4 veces más rápido**: hasta 12 imágenes en paralelo

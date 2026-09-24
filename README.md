@@ -1,6 +1,6 @@
 🇫🇷 **Français** · [🇬🇧 English](./README_EN.md) · [🇪🇸 Español](./README_ES.md)
 
-# DMD GIF Creator 128x32 — v3.0.1
+# DMD GIF Creator 128x32 — v3.0.2
 
 Créez des GIF optimisés pour les écrans DMD 128×32 (borne d'arcade, flipper,
 [RecalBox DMD](https://github.com/shan-aya/RecalBoxDMD)) à partir d'**images**, d'une
@@ -13,14 +13,14 @@ traitement par lot de dossiers entiers.
 
 ## Téléchargement
 
-**Windows** : téléchargez `dmd_gif_creator_v301.exe` dans la
+**Windows** : téléchargez `dmd_gif_creator_v302.exe` dans la
 [dernière Release](https://github.com/shan-aya/DMD_GIF_converter/releases/latest) et
 lancez-le — aucune installation nécessaire.
 
 **Depuis les sources** (dossier [`dmd_gif_creator/`](./dmd_gif_creator)) :
 
     pip install pillow numpy tkinterdnd2 markdown opencv-contrib-python
-    python dmd_gif_creator/dmd_gif_creator_v301.py
+    python dmd_gif_creator/dmd_gif_creator_v302.py
 
 `opencv-contrib-python` (et non `opencv-python`) est nécessaire pour le suivi
 automatique de l'onglet VIDEO ; les deux paquets ne doivent pas être installés en même
@@ -31,11 +31,18 @@ temps.
 ### AUTO — une image, six propositions
 
 Glissez-déposez des images ou des dossiers entiers (PNG, JPG, BMP, GIF, raw565).
-Pour chaque image, l'application analyse le contenu et propose six rendus 128×32 :
-redimensionné, défilant, optimisé, et trois variantes artistiques. L'aperçu LED
-reproduit le rendu réel du panneau. Le **traitement par lot** convertit ensuite toute
-la liste en parallèle, en conservant l'arborescence des dossiers, sans jamais modifier
-les fichiers source.
+Pour chaque image, l'application calcule deux rendus 128×32 — **Resize** (l'image entière
+réduite) et **Fill** (l'image à plus grande taille, qui défile) — et leur donne un score
+d'occupation de l'écran et de lisibilité. Le meilleur est retenu, puis affiné
+(nettoyage, pixel-perfect). **Si le texte devient trop petit pour être lu en Resize,
+Fill est imposé**, même quand Resize a le meilleur score. Trois variantes artistiques
+complètent les six propositions ; l'aperçu LED (avec loupe) montre le rendu réel du
+panneau.
+
+Le **traitement par lot** applique cette même analyse à chaque image d'un dossier —
+par exemple tous les logos scrapés d'une ludothèque : chaque logo reçoit le mode de
+rendu qui lui convient, en parallèle, avec l'arborescence conservée et les fichiers
+source jamais modifiés. Une proposition peut être verrouillée pour tout le lot.
 
 ### MANUEL — édition avancée
 
@@ -69,6 +76,10 @@ glitch…), avec une durée ajustée automatiquement à la longueur du texte.
 - **AIDE** : le guide complet dans l'application.
 
 ## Nouveautés
+
+**v3.0.2**
+- Onglet AUTO entièrement traduit en anglais et en espagnol (noms des propositions,
+  ligne d'état, barre d'état).
 
 **v3.0.1**
 - Traitement par lot environ **2,4 fois plus rapide** : jusqu'à 12 images en parallèle

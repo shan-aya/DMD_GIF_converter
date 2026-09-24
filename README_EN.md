@@ -1,6 +1,6 @@
 [🇫🇷 Français](./README.md) · 🇬🇧 **English** · [🇪🇸 Español](./README_ES.md)
 
-# DMD GIF Creator 128x32 — v3.0.1
+# DMD GIF Creator 128x32 — v3.0.2
 
 Create GIFs optimized for 128×32 DMD displays (arcade cabinet, pinball,
 [RecalBox DMD](https://github.com/shan-aya/RecalBoxDMD)) from **images**, a **video**
@@ -13,14 +13,14 @@ processing of whole folders.
 
 ## Download
 
-**Windows**: download `dmd_gif_creator_v301.exe` from the
+**Windows**: download `dmd_gif_creator_v302.exe` from the
 [latest Release](https://github.com/shan-aya/DMD_GIF_converter/releases/latest) and run
 it — nothing to install.
 
 **From the sources** ([`dmd_gif_creator/`](./dmd_gif_creator) folder):
 
     pip install pillow numpy tkinterdnd2 markdown opencv-contrib-python
-    python dmd_gif_creator/dmd_gif_creator_v301.py
+    python dmd_gif_creator/dmd_gif_creator_v302.py
 
 `opencv-contrib-python` (not `opencv-python`) is required for the automatic tracking of
 the VIDEO tab; the two packages must not be installed at the same time.
@@ -30,10 +30,17 @@ the VIDEO tab; the two packages must not be installed at the same time.
 ### AUTO — one image, six proposals
 
 Drag and drop images or whole folders (PNG, JPG, BMP, GIF, raw565). For each image,
-the application analyzes the content and offers six 128×32 renders: resized,
-scrolling, optimized, and three artistic variants. The LED preview reproduces the
-real panel render. **Batch processing** then converts the whole list in parallel,
-keeping the folder tree, without ever modifying the source files.
+the application computes two 128×32 renders — **Resize** (the whole image scaled down)
+and **Fill** (the image at a larger size, scrolling) — and scores them on screen
+coverage and readability. The best one is kept, then refined (cleanup,
+pixel-perfect). **If the text gets too small to read in Resize, Fill is enforced**,
+even when Resize has the better score. Three artistic variants complete the six
+proposals; the LED preview (with magnifier) shows the real panel render.
+
+**Batch processing** applies the same analysis to every image of a folder — all the
+scraped logos of a game library, for example: each logo gets the render mode that
+suits it, in parallel, with the folder tree kept and source files never modified. A
+proposal can be locked for the whole batch.
 
 ### MANUAL — advanced editing
 
@@ -67,6 +74,10 @@ fitted automatically to the text length.
 - **HELP**: the full guide inside the application.
 
 ## What's new
+
+**v3.0.2**
+- AUTO tab fully translated into English and Spanish (proposal names, status line,
+  status bar).
 
 **v3.0.1**
 - Batch processing about **2.4 times faster**: up to 12 images in parallel depending

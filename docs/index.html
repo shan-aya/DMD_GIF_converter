@@ -163,6 +163,15 @@
     .grid2{ grid-template-columns:1fr; }
     .stats{ grid-template-columns:1fr; }
   }
+
+  /* v2 de la page : propositions AUTO, encadre, fleche */
+  .src{ max-width:420px; margin-inline:auto; }
+  .arrow{ text-align:center; color:var(--muted-dim); font-size:14px; margin:12px 0 0; }
+  .props figure.shot figcaption em{ font-style:normal; color:var(--led-white); font-variant-numeric:tabular-nums; }
+  .props figure.shot figcaption b{ color:var(--led-green); font-weight:700; }
+  .props figure.win{ box-shadow:0 0 0 2px var(--led-green), 0 0 30px -6px rgba(62,224,106,.6); }
+  .callout{ margin-top:18px; border:1px solid var(--line); border-left:3px solid var(--amber); border-radius:6px; padding:12px 14px; background:var(--panel); }
+  .callout p{ font-size:14.5px; max-width:none; }
 </style>
 </head>
 <body>
@@ -180,43 +189,87 @@
   <header class="hero">
     <div class="brand" data-i18n="brand">Écran DMD 128×32 · Création de GIF</div>
     <h1>DMD GIF <span class="v">Creator</span></h1>
-    <p class="tag" data-i18n="tag">Transformez images, logos, vidéos et textes en GIF taillés pour un écran DMD 128×32 — borne d'arcade, flipper, RecalBox DMD. L'application analyse, propose, et convertit des dossiers entiers en une fois.</p>
+    <p class="tag" data-i18n="tag">Transformez images, logos, vidéos et textes en GIF taillés pour un écran DMD 128×32 — borne d'arcade, flipper, RecalBox DMD. L'application juge elle-même ce qui reste lisible, choisit le bon rendu, et traite des dossiers entiers.</p>
     <div class="ctarow">
       <a class="cta cta-stack" data-dl href="https://github.com/shan-aya/DMD_GIF_converter/releases/latest"><span data-i18n="dl.label">⬇ Télécharger pour Windows</span><small class="cta-date" data-reldate hidden></small></a>
       <a class="cta cta-secondary" href="https://github.com/shan-aya/DMD_GIF_converter" target="_blank" rel="noopener"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg><span data-i18n="gh.label">Sources et notice</span></a>
     </div>
     <p class="req" data-i18n="req">Windows · exécutable autonome, rien à installer · gratuit</p>
     <figure class="shot glow-w" style="margin-top:24px;">
-      <a data-shot-link="auto" href="media/auto_fr.png"><img data-shot="auto" src="media/auto_fr.png" data-i18n-alt="alt.auto" alt="Onglet AUTO : liste d'images, aperçu DMD et six propositions IA."></a>
+      <a data-shot-link="auto" href="media/auto_fr.png"><img data-shot="auto" src="media/auto_fr.png" data-i18n-alt="alt.auto" alt="Onglet AUTO : liste d'images, aperçu DMD et six propositions."></a>
     </figure>
   </header>
 
-  <div class="divider" data-i18n="divider1">Quatre façons de créer</div>
+  <div class="divider" data-i18n="divider1">Le cœur : l'analyse automatique</div>
 
   <section class="feat">
     <span class="eyebrow" style="color:var(--led-blue)" data-i18n="s1.eyebrow">Auto</span>
-    <h2 data-i18n="s1.h2">Une image, six propositions</h2>
-    <p data-i18n="s1.p">Déposez un logo : l'application recadre, teste la version redimensionnée et la version qui défile, garde la plus lisible, et ajoute trois variantes artistiques. L'aperçu LED montre le rendu réel du panneau avant d'exporter.</p>
-    <div class="grid2">
-      <figure class="shot glow-b dmd"><img src="media/logo-pacman.gif" alt="Pac-Man"></figure>
-      <figure class="shot glow-b dmd"><img src="media/logo-sf2.gif" alt="Street Fighter II"></figure>
-      <figure class="shot glow-b dmd"><img src="media/logo-dkong.gif" alt="Donkey Kong"></figure>
-      <figure class="shot glow-b dmd"><img src="media/logo-sonic.gif" alt="Sonic &amp; Knuckles"></figure>
-      <figure class="shot glow-b dmd"><img src="media/logo-outrun.gif" alt="Out Run"></figure>
-      <figure class="shot glow-b dmd"><img src="media/logo-mk.gif" alt="Mortal Kombat"></figure>
+    <h2 data-i18n="s1.h2">Un logo, six propositions</h2>
+    <p data-i18n="s1.p">Pour chaque image, l'application calcule deux rendus 128×32 — <strong>Resize</strong> (l'image entière, réduite) et <strong>Fill</strong> (l'image plus grande, qui défile) — et leur donne un <strong>score</strong> d'occupation de l'écran et de lisibilité. Le meilleur est retenu puis affiné en <strong>Optimisé</strong> ; trois variantes artistiques complètent le choix. Voici exactement ce qu'elle propose pour ce logo :</p>
+    <figure class="shot glow-w src">
+      <img src="media/auto-source.png" data-i18n-alt="alt.source" alt="Logo Out Run d'origine, 600×260 pixels.">
+      <figcaption data-i18n="cap.source">Image d'origine · 600×260</figcaption>
+    </figure>
+    <div class="arrow" aria-hidden="true">▼</div>
+    <div class="grid2 props">
+      <figure class="shot dmd"><img src="media/auto-prop1.gif" alt="Resize"><figcaption><span data-i18n="p.resize">1. Resize</span> <em>3.96</em></figcaption></figure>
+      <figure class="shot dmd"><img src="media/auto-prop2.gif" alt="Fill"><figcaption><span data-i18n="p.fill">2. Fill</span> <em>3.47</em></figcaption></figure>
+      <figure class="shot dmd win"><img src="media/auto-prop3.gif" alt="Optimisé"><figcaption><span data-i18n="p.opt">3. Optimisé</span> <em>3.49</em> <b data-i18n="p.kept">✓ retenu</b></figcaption></figure>
+      <figure class="shot dmd"><img src="media/auto-prop4.gif" alt="Fade"><figcaption><span data-i18n="p.art">Artistique :</span> Fade</figcaption></figure>
+      <figure class="shot dmd"><img src="media/auto-prop5.gif" alt="Glitch"><figcaption><span data-i18n="p.art">Artistique :</span> Glitch</figcaption></figure>
+      <figure class="shot dmd"><img src="media/auto-prop6.gif" alt="Color shift"><figcaption><span data-i18n="p.art">Artistique :</span> Color shift</figcaption></figure>
     </div>
-    <p class="cap" data-i18n="cap.logos">GIF 128×32 produits par l'application, affichés à l'échelle du pixel</p>
+    <div class="callout">
+      <p data-i18n="s1.callout"><strong>Lisibilité d'abord.</strong> Ici, Resize obtient le meilleur score (3.96 contre 3.47), mais réduit à 32 pixels de haut, le lettrage deviendrait illisible sur le panneau. L'application le détecte et <strong>impose Fill</strong> : le logo reste grand et défile. C'est la mesure de la hauteur des lettres après réduction qui décide, pas seulement le score.</p>
+    </div>
   </section>
 
   <section class="feat">
     <span class="eyebrow" style="color:var(--amber)" data-i18n="s2.eyebrow">Traitement par lot</span>
-    <h2 data-i18n="s2.h2">Des milliers d'images d'un coup</h2>
-    <p data-i18n="s2.p">Choisissez un dossier entier — les logos de toute une ludothèque par exemple — et lancez le lot. Les images sont traitées en parallèle, l'arborescence des dossiers est conservée en sortie, et les fichiers source ne sont jamais modifiés.</p>
+    <h2 data-i18n="s2.h2">Un dossier entier, chaque logo traité à sa façon</h2>
+    <p data-i18n="s2.p">Donnez-lui un dossier complet — par exemple tous les logos scrapés d'une ludothèque. Chaque image passe par la même analyse que ci-dessus et reçoit <strong>son propre mode de rendu</strong> : réduit quand il reste lisible, défilant quand le texte l'exige. Les images sont traitées en parallèle, l'arborescence est conservée en sortie, les fichiers source ne sont jamais modifiés, et une proposition peut être verrouillée pour tout le lot.</p>
+    <div class="grid2 props">
+      <figure class="shot dmd glow-a"><img src="media/batch-1.gif" alt="Strider"><figcaption>Strider · <span data-i18n="m.resize">Resize (meilleur score)</span></figcaption></figure>
+      <figure class="shot dmd glow-a"><img src="media/batch-2.gif" alt="Out Run"><figcaption>Out Run · <span data-i18n="m.forced">Fill imposé (lisibilité)</span></figcaption></figure>
+      <figure class="shot dmd glow-a"><img src="media/batch-3.gif" alt="Strike Wolf"><figcaption>Strike Wolf · <span data-i18n="m.fill">Fill (meilleur score)</span></figcaption></figure>
+      <figure class="shot dmd glow-a"><img src="media/batch-4.gif" alt="X-Men vs Street Fighter"><figcaption>X-Men vs SF · <span data-i18n="m.forced">Fill imposé (lisibilité)</span></figcaption></figure>
+      <figure class="shot dmd glow-a"><img src="media/batch-5.gif" alt="Excitebike"><figcaption>Excitebike · <span data-i18n="m.resize">Resize (meilleur score)</span></figcaption></figure>
+      <figure class="shot dmd glow-a"><img src="media/batch-6.gif" alt="King of Fighters 97"><figcaption>KOF '97 · <span data-i18n="m.resize">Resize (meilleur score)</span></figcaption></figure>
+    </div>
+    <p class="cap" data-i18n="cap.batch">Six logos d'un même lot : le mode a été choisi pour chacun, sans intervention</p>
     <div class="stats">
       <div class="stat"><b class="num">12</b><span data-i18n="stat.workers">images traitées en parallèle</span></div>
-      <div class="stat"><b class="num" data-i18n="stat.x">×2,4</b><span data-i18n="stat.speed">plus rapide qu'en v3.0</span></div>
+      <div class="stat"><b class="num" data-i18n="stat.x">×2,4</b><span data-i18n="stat.speed">plus rapide que la v2</span></div>
       <div class="stat"><b class="num" data-i18n="stat.n">55 000</b><span data-i18n="stat.folder">images chargées sans figer la fenêtre</span></div>
     </div>
+  </section>
+
+  <section class="feat">
+    <span class="eyebrow" style="color:var(--led-white)" data-i18n="s7.eyebrow">Aperçu LED</span>
+    <h2 data-i18n="s7.h2">Voir le panneau avant d'exporter</h2>
+    <p data-i18n="s7.p">Chaque aperçu reproduit le vrai rendu d'un panneau LED : points ronds, espace sombre entre eux, léger halo. Un clic ouvre la <strong>loupe</strong>, une fenêtre agrandie ×8 animée en direct, et un curseur simule la luminosité du panneau.</p>
+    <figure class="shot glow-w">
+      <img src="media/led-zoom-strider.png" data-i18n-alt="alt.led" alt="Logo Strider en rendu LED agrandi : chaque pixel est une LED ronde.">
+      <figcaption data-i18n="cap.led">Loupe ×8 · Strider</figcaption>
+    </figure>
+    <figure class="shot glow-w" style="margin-top:14px;">
+      <img src="media/led-zoom.gif" data-i18n-alt="alt.ledanim" alt="Logo Out Run qui défile, en rendu LED agrandi.">
+      <figcaption data-i18n="cap.ledanim">Loupe animée · Out Run en défilement</figcaption>
+    </figure>
+  </section>
+
+  <section class="feat">
+    <span class="eyebrow" style="color:var(--led-green)" data-i18n="s8.eyebrow">Pixel-perfect</span>
+    <h2 data-i18n="s8.h2">Des pixels nets, pas de la bouillie</h2>
+    <p data-i18n="s8.p">Un écran DMD n'a que 4 096 points : chaque pixel compte. Le mode <strong>Pixel-perfect</strong> impose un facteur d'échelle entier au lieu d'un redimensionnement fractionnaire, pour que chaque pixel de l'image tombe exactement sur une LED. Sur un logo en pixel-art, la différence est immédiate :</p>
+    <figure class="shot dmd">
+      <img src="media/pp-off.png" data-i18n-alt="alt.ppoff" alt="Strike Wolf sans pixel-perfect : lettres réduites et floues.">
+      <figcaption data-i18n="cap.ppoff">Sans pixel-perfect · réduction fractionnaire, 516 couleurs, lettres baveuses</figcaption>
+    </figure>
+    <figure class="shot dmd glow-g" style="margin-top:14px;">
+      <img src="media/pp-on.png" data-i18n-alt="alt.ppon" alt="Strike Wolf avec pixel-perfect : pixels d'origine nets.">
+      <figcaption data-i18n="cap.ppon">Avec pixel-perfect · pixels d'origine 1:1, 192 couleurs, le logo défile</figcaption>
+    </figure>
   </section>
 
   <section class="feat">
@@ -234,7 +287,7 @@
     <p data-i18n="s4.p">Choisissez le passage sur la frise, puis le cadrage : suivi automatique d'un sujet, cadrage auto avec zoom, ou points manuels qui déplacent la zone au fil du temps. La qualité automatique ajuste les couleurs d'après la vidéo et le poids du GIF s'affiche en direct.</p>
     <figure class="shot glow-r dmd">
       <img src="media/demo-video.gif" data-i18n-alt="alt.demovideo" alt="GIF 128×32 produit depuis une vidéo filmée du panneau DMD.">
-      <figcaption data-i18n="cap.demovideo">Résultat : 14 s de vidéo → GIF 128×32</figcaption>
+      <figcaption data-i18n="cap.demovideo">14 s de vidéo → GIF 128×32 animé</figcaption>
     </figure>
     <figure class="shot glow-r" style="margin-top:14px;">
       <a data-shot-link="video" href="media/video_fr.png"><img data-shot="video" src="media/video_fr.png" data-i18n-alt="alt.video" alt="Onglet VIDEO : frise de sélection, cadrage et aperçu."></a>
@@ -246,7 +299,8 @@
     <h2 data-i18n="s5.h2">Du texte qui bouge</h2>
     <p data-i18n="s5.p">Tapez un message, choisissez police, couleurs et effet — arc-en-ciel, néon, feu, métal… — puis l'animation : défilement, vague, Star Wars, machine à écrire, pluie Matrix, glitch. La durée s'ajuste toute seule à la longueur du texte.</p>
     <figure class="shot glow-b dmd">
-      <img src="media/demo-text.gif" data-i18n-alt="alt.demotext" alt="Texte arc-en-ciel défilant sur 128×32.">
+      <img src="media/demo-text.gif" data-i18n-alt="alt.demotext" alt="« INSERT COIN » en arc-en-ciel qui défile sur 128×32.">
+      <figcaption data-i18n="cap.demotext">GIF animé exporté par l'application</figcaption>
     </figure>
     <figure class="shot glow-b" style="margin-top:14px;">
       <a data-shot-link="textscroll" href="media/textscroll_fr.png"><img data-shot="textscroll" src="media/textscroll_fr.png" data-i18n-alt="alt.textscroll" alt="Onglet TEXTSCROLL : texte, police, effets et animation."></a>
@@ -261,7 +315,7 @@
   <section class="feat">
     <span class="eyebrow" style="color:var(--led-white)" data-i18n="s6.eyebrow">RecalBox DMD</span>
     <h2 data-i18n="s6.h2">Le compagnon du panneau RecalBox DMD</h2>
-    <p data-i18n="s6.p">Les GIF sortent au format exact attendu par le panneau <a href="https://shan-aya.github.io/RecalBoxDMD/" target="_blank" rel="noopener">RecalBox DMD</a> : 128×32, palette réduite, poids maîtrisé. Glissez-les ensuite dans sa playlist ou sur sa carte SD.</p>
+    <p data-i18n="s6.p">Les GIF sortent au format attendu par le panneau <a href="https://shan-aya.github.io/RecalBoxDMD/" target="_blank" rel="noopener">RecalBox DMD</a> : 128×32, palette réduite, poids maîtrisé. Glissez-les ensuite dans sa playlist ou sur sa carte SD.</p>
     <div class="chips">
       <span class="chip">PNG</span><span class="chip">JPG</span><span class="chip">BMP</span><span class="chip">GIF</span><span class="chip">raw565</span><span class="chip">MP4</span><span class="chip">MOV</span><span class="chip">MKV</span><span class="chip">AVI</span>
     </div>
@@ -282,127 +336,211 @@
 <script>
 (function(){
   var translations = {
-    fr: {
-      "brand": "Écran DMD 128×32 · Création de GIF",
-      "tag": "Transformez images, logos, vidéos et textes en GIF taillés pour un écran DMD 128×32 — borne d'arcade, flipper, RecalBox DMD. L'application analyse, propose, et convertit des dossiers entiers en une fois.",
-      "dl.label": "⬇ Télécharger pour Windows",
-      "rel.label": "Version",
-      "gh.label": "Sources et notice",
-      "req": "Windows · exécutable autonome, rien à installer · gratuit",
-      "alt.auto": "Onglet AUTO : liste d'images, aperçu DMD et six propositions IA.",
-      "divider1": "Quatre façons de créer",
-      "s1.eyebrow": "Auto",
-      "s1.h2": "Une image, six propositions",
-      "s1.p": "Déposez un logo : l'application recadre, teste la version redimensionnée et la version qui défile, garde la plus lisible, et ajoute trois variantes artistiques. L'aperçu LED montre le rendu réel du panneau avant d'exporter.",
-      "cap.logos": "GIF 128×32 produits par l'application, affichés à l'échelle du pixel",
-      "s2.eyebrow": "Traitement par lot",
-      "s2.h2": "Des milliers d'images d'un coup",
-      "s2.p": "Choisissez un dossier entier — les logos de toute une ludothèque par exemple — et lancez le lot. Les images sont traitées en parallèle, l'arborescence des dossiers est conservée en sortie, et les fichiers source ne sont jamais modifiés.",
-      "stat.workers": "images traitées en parallèle", "stat.x": "×2,4", "stat.n": "55 000",
-      "stat.speed": "plus rapide qu'en v3.0",
-      "stat.folder": "images chargées sans figer la fenêtre",
-      "s3.eyebrow": "Manuel",
-      "s3.h2": "La main sur chaque pixel",
-      "s3.p": "Recadrage 128×32, luminosité, contraste, netteté, filtres, pot de peinture et gomme magique, animations avec easing et boucle, multi-images et morphing — avec annuler/rétablir à chaque étape.",
-      "alt.manual": "Onglet MANUEL : effets, filtres, outils de dessin et aperçu de l'animation.",
-      "s4.eyebrow": "Vidéo",
-      "s4.h2": "Un passage de vidéo, en GIF DMD",
-      "s4.p": "Choisissez le passage sur la frise, puis le cadrage : suivi automatique d'un sujet, cadrage auto avec zoom, ou points manuels qui déplacent la zone au fil du temps. La qualité automatique ajuste les couleurs d'après la vidéo et le poids du GIF s'affiche en direct.",
-      "alt.demovideo": "GIF 128×32 produit depuis une vidéo filmée du panneau DMD.",
-      "cap.demovideo": "Résultat : 14 s de vidéo → GIF 128×32",
-      "alt.video": "Onglet VIDEO : frise de sélection, cadrage et aperçu.",
-      "s5.eyebrow": "Textscroll",
-      "s5.h2": "Du texte qui bouge",
-      "s5.p": "Tapez un message, choisissez police, couleurs et effet — arc-en-ciel, néon, feu, métal… — puis l'animation : défilement, vague, Star Wars, machine à écrire, pluie Matrix, glitch. La durée s'ajuste toute seule à la longueur du texte.",
-      "alt.demotext": "Texte arc-en-ciel défilant sur 128×32.",
-      "alt.textscroll": "Onglet TEXTSCROLL : texte, police, effets et animation.",
-      "divider2": "Pensé pour les écrans DMD",
-      "s6.eyebrow": "RecalBox DMD",
-      "s6.h2": "Le compagnon du panneau RecalBox DMD",
-      "s6.p": "Les GIF sortent au format exact attendu par le panneau <a href=\"https://shan-aya.github.io/RecalBoxDMD/\" target=\"_blank\" rel=\"noopener\">RecalBox DMD</a> : 128×32, palette réduite, poids maîtrisé. Glissez-les ensuite dans sa playlist ou sur sa carte SD.",
-      "footer.p1": "Interface et notice disponibles en français, anglais et espagnol."
-    },
-    en: {
-      "brand": "128×32 DMD display · GIF making",
-      "tag": "Turn images, logos, videos and text into GIFs cut for a 128×32 DMD display — arcade cabinet, pinball, RecalBox DMD. The app analyzes, suggests, and converts whole folders in one go.",
-      "dl.label": "⬇ Download for Windows",
-      "rel.label": "Version",
-      "gh.label": "Sources and guide",
-      "req": "Windows · standalone executable, nothing to install · free",
-      "alt.auto": "AUTO tab: image list, DMD preview and six AI proposals.",
-      "divider1": "Four ways to create",
-      "s1.eyebrow": "Auto",
-      "s1.h2": "One image, six proposals",
-      "s1.p": "Drop a logo: the app crops it, tries the resized version and the scrolling one, keeps the most readable, and adds three artistic variants. The LED preview shows the real panel render before you export.",
-      "cap.logos": "128×32 GIFs made by the app, shown pixel-for-pixel",
-      "s2.eyebrow": "Batch processing",
-      "s2.h2": "Thousands of images at once",
-      "s2.p": "Pick a whole folder — the logos of an entire game library, say — and start the batch. Images are processed in parallel, the folder tree is kept in the output, and source files are never modified.",
-      "stat.workers": "images processed in parallel", "stat.x": "×2.4", "stat.n": "55,000",
-      "stat.speed": "faster than v3.0",
-      "stat.folder": "images loaded without freezing the window",
-      "s3.eyebrow": "Manual",
-      "s3.h2": "Your hand on every pixel",
-      "s3.p": "128×32 crop, brightness, contrast, sharpness, filters, fill and magic eraser, animations with easing and looping, multi-images and morphing — with undo/redo at every step.",
-      "alt.manual": "MANUAL tab: effects, filters, drawing tools and animation preview.",
-      "s4.eyebrow": "Video",
-      "s4.h2": "A video clip, as a DMD GIF",
-      "s4.p": "Pick the section on the timeline, then the framing: automatic subject tracking, auto framing with zoom, or manual points that move the area over time. Automatic quality tunes the colors from the video, and the GIF size is shown live.",
-      "alt.demovideo": "128×32 GIF made from a video of the DMD panel.",
-      "cap.demovideo": "Result: 14 s of video → 128×32 GIF",
-      "alt.video": "VIDEO tab: selection timeline, framing and preview.",
-      "s5.eyebrow": "Textscroll",
-      "s5.h2": "Text that moves",
-      "s5.p": "Type a message, pick font, colors and effect — rainbow, neon, fire, metal… — then the animation: scroll, wave, Star Wars, typewriter, Matrix rain, glitch. The duration fits itself to the length of the text.",
-      "alt.demotext": "Rainbow text scrolling on 128×32.",
-      "alt.textscroll": "TEXTSCROLL tab: text, font, effects and animation.",
-      "divider2": "Made for DMD displays",
-      "s6.eyebrow": "RecalBox DMD",
-      "s6.h2": "The companion of the RecalBox DMD panel",
-      "s6.p": "GIFs come out in the exact format the <a href=\"https://shan-aya.github.io/RecalBoxDMD/\" target=\"_blank\" rel=\"noopener\">RecalBox DMD</a> panel expects: 128×32, reduced palette, controlled size. Then drop them into its playlist or onto its SD card.",
-      "footer.p1": "Interface and guide available in French, English and Spanish."
-    },
-    es: {
-      "brand": "Pantalla DMD 128×32 · Creación de GIF",
-      "tag": "Convierte imágenes, logos, vídeos y textos en GIF hechos para una pantalla DMD 128×32 — máquina arcade, pinball, RecalBox DMD. La aplicación analiza, propone y convierte carpetas enteras de una vez.",
-      "dl.label": "⬇ Descargar para Windows",
-      "rel.label": "Versión",
-      "gh.label": "Código y guía",
-      "req": "Windows · ejecutable autónomo, nada que instalar · gratis",
-      "alt.auto": "Pestaña AUTO: lista de imágenes, vista previa DMD y seis propuestas IA.",
-      "divider1": "Cuatro formas de crear",
-      "s1.eyebrow": "Auto",
-      "s1.h2": "Una imagen, seis propuestas",
-      "s1.p": "Suelta un logo: la aplicación lo recorta, prueba la versión redimensionada y la que se desplaza, se queda con la más legible y añade tres variantes artísticas. La vista previa LED muestra el render real del panel antes de exportar.",
-      "cap.logos": "GIF 128×32 creados por la aplicación, mostrados píxel a píxel",
-      "s2.eyebrow": "Procesamiento por lotes",
-      "s2.h2": "Miles de imágenes de una vez",
-      "s2.p": "Elige una carpeta entera — los logos de toda una ludoteca, por ejemplo — y lanza el lote. Las imágenes se procesan en paralelo, el árbol de carpetas se conserva en la salida y los archivos de origen nunca se modifican.",
-      "stat.workers": "imágenes procesadas en paralelo", "stat.x": "×2,4", "stat.n": "55 000",
-      "stat.speed": "más rápido que la v3.0",
-      "stat.folder": "imágenes cargadas sin congelar la ventana",
-      "s3.eyebrow": "Manual",
-      "s3.h2": "Control sobre cada píxel",
-      "s3.p": "Recorte 128×32, brillo, contraste, nitidez, filtros, relleno y goma mágica, animaciones con easing y bucle, multi-imágenes y morphing — con deshacer/rehacer en cada paso.",
-      "alt.manual": "Pestaña MANUAL: efectos, filtros, herramientas de dibujo y vista previa de la animación.",
-      "s4.eyebrow": "Vídeo",
-      "s4.h2": "Un fragmento de vídeo, en GIF DMD",
-      "s4.p": "Elige el fragmento en la línea de tiempo y luego el encuadre: seguimiento automático de un sujeto, encuadre automático con zoom o puntos manuales que mueven la zona con el tiempo. La calidad automática ajusta los colores según el vídeo y el peso del GIF se muestra en directo.",
-      "alt.demovideo": "GIF 128×32 creado a partir de un vídeo del panel DMD.",
-      "cap.demovideo": "Resultado: 14 s de vídeo → GIF 128×32",
-      "alt.video": "Pestaña VIDEO: línea de tiempo, encuadre y vista previa.",
-      "s5.eyebrow": "Textscroll",
-      "s5.h2": "Texto en movimiento",
-      "s5.p": "Escribe un mensaje, elige fuente, colores y efecto — arcoíris, neón, fuego, metal… — y luego la animación: desplazamiento, ola, Star Wars, máquina de escribir, lluvia Matrix, glitch. La duración se ajusta sola a la longitud del texto.",
-      "alt.demotext": "Texto arcoíris desplazándose en 128×32.",
-      "alt.textscroll": "Pestaña TEXTSCROLL: texto, fuente, efectos y animación.",
-      "divider2": "Pensado para pantallas DMD",
-      "s6.eyebrow": "RecalBox DMD",
-      "s6.h2": "El compañero del panel RecalBox DMD",
-      "s6.p": "Los GIF salen en el formato exacto que espera el panel <a href=\"https://shan-aya.github.io/RecalBoxDMD/\" target=\"_blank\" rel=\"noopener\">RecalBox DMD</a>: 128×32, paleta reducida, peso controlado. Después, añádelos a su playlist o a su tarjeta SD.",
-      "footer.p1": "Interfaz y guía disponibles en francés, inglés y español."
-    }
-  };
+ "fr": {
+  "brand": "Écran DMD 128×32 · Création de GIF",
+  "tag": "Transformez images, logos, vidéos et textes en GIF taillés pour un écran DMD 128×32 — borne d'arcade, flipper, RecalBox DMD. L'application juge elle-même ce qui reste lisible, choisit le bon rendu, et traite des dossiers entiers.",
+  "dl.label": "⬇ Télécharger pour Windows",
+  "rel.label": "Version",
+  "gh.label": "Sources et notice",
+  "req": "Windows · exécutable autonome, rien à installer · gratuit",
+  "alt.auto": "Onglet AUTO : liste d'images, aperçu DMD et six propositions.",
+  "divider1": "Le cœur : l'analyse automatique",
+  "s1.eyebrow": "Auto",
+  "s1.h2": "Un logo, six propositions",
+  "s1.p": "Pour chaque image, l'application calcule deux rendus 128×32 — <strong>Resize</strong> (l'image entière, réduite) et <strong>Fill</strong> (l'image plus grande, qui défile) — et leur donne un <strong>score</strong> d'occupation de l'écran et de lisibilité. Le meilleur est retenu puis affiné en <strong>Optimisé</strong> ; trois variantes artistiques complètent le choix. Voici exactement ce qu'elle propose pour ce logo :",
+  "alt.source": "Logo Out Run d'origine, 600×260 pixels.",
+  "cap.source": "Image d'origine · 600×260",
+  "p.resize": "1. Resize",
+  "p.fill": "2. Fill",
+  "p.opt": "3. Optimisé",
+  "p.kept": "✓ retenu",
+  "p.art": "Artistique :",
+  "s1.callout": "<strong>Lisibilité d'abord.</strong> Ici, Resize obtient le meilleur score (3.96 contre 3.47), mais réduit à 32 pixels de haut, le lettrage deviendrait illisible sur le panneau. L'application le détecte et <strong>impose Fill</strong> : le logo reste grand et défile. C'est la mesure de la hauteur des lettres après réduction qui décide, pas seulement le score.",
+  "s2.eyebrow": "Traitement par lot",
+  "s2.h2": "Un dossier entier, chaque logo traité à sa façon",
+  "s2.p": "Donnez-lui un dossier complet — par exemple tous les logos scrapés d'une ludothèque. Chaque image passe par la même analyse que ci-dessus et reçoit <strong>son propre mode de rendu</strong> : réduit quand il reste lisible, défilant quand le texte l'exige. Les images sont traitées en parallèle, l'arborescence est conservée en sortie, les fichiers source ne sont jamais modifiés, et une proposition peut être verrouillée pour tout le lot.",
+  "m.resize": "Resize (meilleur score)",
+  "m.fill": "Fill (meilleur score)",
+  "m.forced": "Fill imposé (lisibilité)",
+  "cap.batch": "Six logos d'un même lot : le mode a été choisi pour chacun, sans intervention",
+  "stat.workers": "images traitées en parallèle",
+  "stat.x": "×2,4",
+  "stat.speed": "plus rapide que la v2",
+  "stat.n": "55 000",
+  "stat.folder": "images chargées sans figer la fenêtre",
+  "s7.eyebrow": "Aperçu LED",
+  "s7.h2": "Voir le panneau avant d'exporter",
+  "s7.p": "Chaque aperçu reproduit le vrai rendu d'un panneau LED : points ronds, espace sombre entre eux, léger halo. Un clic ouvre la <strong>loupe</strong>, une fenêtre agrandie ×8 animée en direct, et un curseur simule la luminosité du panneau.",
+  "alt.led": "Logo Strider en rendu LED agrandi : chaque pixel est une LED ronde.",
+  "cap.led": "Loupe ×8 · Strider",
+  "alt.ledanim": "Logo Out Run qui défile, en rendu LED agrandi.",
+  "cap.ledanim": "Loupe animée · Out Run en défilement",
+  "s8.eyebrow": "Pixel-perfect",
+  "s8.h2": "Des pixels nets, pas de la bouillie",
+  "s8.p": "Un écran DMD n'a que 4 096 points : chaque pixel compte. Le mode <strong>Pixel-perfect</strong> impose un facteur d'échelle entier au lieu d'un redimensionnement fractionnaire, pour que chaque pixel de l'image tombe exactement sur une LED. Sur un logo en pixel-art, la différence est immédiate :",
+  "alt.ppoff": "Strike Wolf sans pixel-perfect : lettres réduites et floues.",
+  "cap.ppoff": "Sans pixel-perfect · réduction fractionnaire, 516 couleurs, lettres baveuses",
+  "alt.ppon": "Strike Wolf avec pixel-perfect : pixels d'origine nets.",
+  "cap.ppon": "Avec pixel-perfect · pixels d'origine 1:1, 192 couleurs, le logo défile",
+  "s3.eyebrow": "Manuel",
+  "s3.h2": "La main sur chaque pixel",
+  "s3.p": "Recadrage 128×32, luminosité, contraste, netteté, filtres, pot de peinture et gomme magique, animations avec easing et boucle, multi-images et morphing — avec annuler/rétablir à chaque étape.",
+  "alt.manual": "Onglet MANUEL : effets, filtres, outils de dessin et aperçu de l'animation.",
+  "s4.eyebrow": "Vidéo",
+  "s4.h2": "Un passage de vidéo, en GIF DMD",
+  "s4.p": "Choisissez le passage sur la frise, puis le cadrage : suivi automatique d'un sujet, cadrage auto avec zoom, ou points manuels qui déplacent la zone au fil du temps. La qualité automatique ajuste les couleurs d'après la vidéo et le poids du GIF s'affiche en direct.",
+  "alt.demovideo": "GIF 128×32 produit depuis une vidéo filmée du panneau DMD.",
+  "cap.demovideo": "14 s de vidéo → GIF 128×32 animé",
+  "alt.video": "Onglet VIDEO : frise de sélection, cadrage et aperçu.",
+  "s5.eyebrow": "Textscroll",
+  "s5.h2": "Du texte qui bouge",
+  "s5.p": "Tapez un message, choisissez police, couleurs et effet — arc-en-ciel, néon, feu, métal… — puis l'animation : défilement, vague, Star Wars, machine à écrire, pluie Matrix, glitch. La durée s'ajuste toute seule à la longueur du texte.",
+  "alt.demotext": "« INSERT COIN » en arc-en-ciel qui défile sur 128×32.",
+  "cap.demotext": "GIF animé exporté par l'application",
+  "alt.textscroll": "Onglet TEXTSCROLL : texte, police, effets et animation.",
+  "divider2": "Pensé pour les écrans DMD",
+  "s6.eyebrow": "RecalBox DMD",
+  "s6.h2": "Le compagnon du panneau RecalBox DMD",
+  "s6.p": "Les GIF sortent au format attendu par le panneau <a href=\"https://shan-aya.github.io/RecalBoxDMD/\" target=\"_blank\" rel=\"noopener\">RecalBox DMD</a> : 128×32, palette réduite, poids maîtrisé. Glissez-les ensuite dans sa playlist ou sur sa carte SD.",
+  "footer.p1": "Interface et notice disponibles en français, anglais et espagnol."
+ },
+ "en": {
+  "brand": "128×32 DMD display · GIF making",
+  "tag": "Turn images, logos, videos and text into GIFs cut for a 128×32 DMD display — arcade cabinet, pinball, RecalBox DMD. The app judges for itself what stays readable, picks the right render, and handles whole folders.",
+  "dl.label": "⬇ Download for Windows",
+  "rel.label": "Version",
+  "gh.label": "Sources and guide",
+  "req": "Windows · standalone executable, nothing to install · free",
+  "alt.auto": "AUTO tab: image list, DMD preview and six proposals.",
+  "divider1": "The core: automatic analysis",
+  "s1.eyebrow": "Auto",
+  "s1.h2": "One logo, six proposals",
+  "s1.p": "For each image, the app computes two 128×32 renders — <strong>Resize</strong> (the whole image, scaled down) and <strong>Fill</strong> (the image larger, scrolling) — and gives each a <strong>score</strong> for screen coverage and readability. The best one is kept and refined into <strong>Optimized</strong>; three artistic variants complete the choice. Here is exactly what it offers for this logo:",
+  "alt.source": "Original Out Run logo, 600×260 pixels.",
+  "cap.source": "Original image · 600×260",
+  "p.resize": "1. Resize",
+  "p.fill": "2. Fill",
+  "p.opt": "3. Optimized",
+  "p.kept": "✓ kept",
+  "p.art": "Artistic:",
+  "s1.callout": "<strong>Readability first.</strong> Here Resize gets the better score (3.96 vs 3.47), but shrunk to 32 pixels high the lettering would become unreadable on the panel. The app detects it and <strong>enforces Fill</strong>: the logo stays large and scrolls. The measured letter height after scaling decides, not just the score.",
+  "s2.eyebrow": "Batch processing",
+  "s2.h2": "A whole folder, each logo handled its own way",
+  "s2.p": "Give it a complete folder — all the scraped logos of a game library, for example. Every image goes through the same analysis as above and gets <strong>its own render mode</strong>: scaled down when it stays readable, scrolling when the text requires it. Images are processed in parallel, the folder tree is kept in the output, source files are never modified, and a proposal can be locked for the whole batch.",
+  "m.resize": "Resize (best score)",
+  "m.fill": "Fill (best score)",
+  "m.forced": "Fill enforced (readability)",
+  "cap.batch": "Six logos from one batch: the mode was chosen for each, hands-off",
+  "stat.workers": "images processed in parallel",
+  "stat.x": "×2.4",
+  "stat.speed": "faster than v2",
+  "stat.n": "55,000",
+  "stat.folder": "images loaded without freezing the window",
+  "s7.eyebrow": "LED preview",
+  "s7.h2": "See the panel before you export",
+  "s7.p": "Every preview reproduces a real LED panel: round dots, dark gaps between them, a slight glow. One click opens the <strong>magnifier</strong>, a ×8 window animated live, and a slider simulates the panel brightness.",
+  "alt.led": "Strider logo in magnified LED render: each pixel is a round LED.",
+  "cap.led": "Magnifier ×8 · Strider",
+  "alt.ledanim": "Scrolling Out Run logo in magnified LED render.",
+  "cap.ledanim": "Animated magnifier · Out Run scrolling",
+  "s8.eyebrow": "Pixel-perfect",
+  "s8.h2": "Sharp pixels, not mush",
+  "s8.p": "A DMD display has only 4,096 dots: every pixel counts. <strong>Pixel-perfect</strong> mode enforces a whole-number scale factor instead of a fractional resize, so every image pixel lands exactly on one LED. On a pixel-art logo, the difference is obvious:",
+  "alt.ppoff": "Strike Wolf without pixel-perfect: small, blurry letters.",
+  "cap.ppoff": "Without pixel-perfect · fractional scaling, 516 colors, smeared letters",
+  "alt.ppon": "Strike Wolf with pixel-perfect: sharp original pixels.",
+  "cap.ppon": "With pixel-perfect · original pixels 1:1, 192 colors, the logo scrolls",
+  "s3.eyebrow": "Manual",
+  "s3.h2": "Your hand on every pixel",
+  "s3.p": "128×32 crop, brightness, contrast, sharpness, filters, fill and magic eraser, animations with easing and looping, multi-images and morphing — with undo/redo at every step.",
+  "alt.manual": "MANUAL tab: effects, filters, drawing tools and animation preview.",
+  "s4.eyebrow": "Video",
+  "s4.h2": "A video clip, as a DMD GIF",
+  "s4.p": "Pick the section on the timeline, then the framing: automatic subject tracking, auto framing with zoom, or manual points that move the area over time. Automatic quality tunes the colors from the video, and the GIF size is shown live.",
+  "alt.demovideo": "128×32 GIF made from a video of the DMD panel.",
+  "cap.demovideo": "14 s of video → animated 128×32 GIF",
+  "alt.video": "VIDEO tab: selection timeline, framing and preview.",
+  "s5.eyebrow": "Textscroll",
+  "s5.h2": "Text that moves",
+  "s5.p": "Type a message, pick font, colors and effect — rainbow, neon, fire, metal… — then the animation: scroll, wave, Star Wars, typewriter, Matrix rain, glitch. The duration fits itself to the length of the text.",
+  "alt.demotext": "Rainbow “INSERT COIN” scrolling on 128×32.",
+  "cap.demotext": "Animated GIF exported by the app",
+  "alt.textscroll": "TEXTSCROLL tab: text, font, effects and animation.",
+  "divider2": "Made for DMD displays",
+  "s6.eyebrow": "RecalBox DMD",
+  "s6.h2": "The companion of the RecalBox DMD panel",
+  "s6.p": "GIFs come out in the format the <a href=\"https://shan-aya.github.io/RecalBoxDMD/\" target=\"_blank\" rel=\"noopener\">RecalBox DMD</a> panel expects: 128×32, reduced palette, controlled size. Then drop them into its playlist or onto its SD card.",
+  "footer.p1": "Interface and guide available in French, English and Spanish."
+ },
+ "es": {
+  "brand": "Pantalla DMD 128×32 · Creación de GIF",
+  "tag": "Convierte imágenes, logos, vídeos y textos en GIF hechos para una pantalla DMD 128×32 — máquina arcade, pinball, RecalBox DMD. La aplicación juzga por sí misma qué sigue siendo legible, elige el render adecuado y procesa carpetas enteras.",
+  "dl.label": "⬇ Descargar para Windows",
+  "rel.label": "Versión",
+  "gh.label": "Código y guía",
+  "req": "Windows · ejecutable autónomo, nada que instalar · gratis",
+  "alt.auto": "Pestaña AUTO: lista de imágenes, vista previa DMD y seis propuestas.",
+  "divider1": "El núcleo: el análisis automático",
+  "s1.eyebrow": "Auto",
+  "s1.h2": "Un logo, seis propuestas",
+  "s1.p": "Para cada imagen, la aplicación calcula dos renders 128×32 — <strong>Resize</strong> (la imagen entera, reducida) y <strong>Fill</strong> (la imagen más grande, con desplazamiento) — y les da una <strong>puntuación</strong> de ocupación de la pantalla y de legibilidad. Se conserva la mejor y se afina en <strong>Optimizado</strong>; tres variantes artísticas completan la elección. Esto es exactamente lo que propone para este logo:",
+  "alt.source": "Logo original de Out Run, 600×260 píxeles.",
+  "cap.source": "Imagen original · 600×260",
+  "p.resize": "1. Resize",
+  "p.fill": "2. Fill",
+  "p.opt": "3. Optimizado",
+  "p.kept": "✓ elegido",
+  "p.art": "Artístico:",
+  "s1.callout": "<strong>La legibilidad primero.</strong> Aquí Resize obtiene mejor puntuación (3.96 frente a 3.47), pero reducido a 32 píxeles de alto el rótulo sería ilegible en el panel. La aplicación lo detecta e <strong>impone Fill</strong>: el logo sigue grande y se desplaza. Decide la altura de las letras medida tras la reducción, no solo la puntuación.",
+  "s2.eyebrow": "Procesamiento por lotes",
+  "s2.h2": "Una carpeta entera, cada logo tratado a su manera",
+  "s2.p": "Dale una carpeta completa — por ejemplo todos los logos scrapeados de una ludoteca. Cada imagen pasa por el mismo análisis y recibe <strong>su propio modo de render</strong>: reducido cuando sigue siendo legible, con desplazamiento cuando el texto lo exige. Las imágenes se procesan en paralelo, el árbol de carpetas se conserva en la salida, los archivos de origen nunca se modifican y una propuesta puede bloquearse para todo el lote.",
+  "m.resize": "Resize (mejor puntuación)",
+  "m.fill": "Fill (mejor puntuación)",
+  "m.forced": "Fill impuesto (legibilidad)",
+  "cap.batch": "Seis logos de un mismo lote: el modo se eligió para cada uno, sin intervención",
+  "stat.workers": "imágenes procesadas en paralelo",
+  "stat.x": "×2,4",
+  "stat.speed": "más rápido que la v2",
+  "stat.n": "55 000",
+  "stat.folder": "imágenes cargadas sin congelar la ventana",
+  "s7.eyebrow": "Vista previa LED",
+  "s7.h2": "Ver el panel antes de exportar",
+  "s7.p": "Cada vista previa reproduce un panel LED real: puntos redondos, separación oscura entre ellos, un ligero halo. Un clic abre la <strong>lupa</strong>, una ventana ampliada ×8 animada en directo, y un cursor simula el brillo del panel.",
+  "alt.led": "Logo de Strider en render LED ampliado: cada píxel es un LED redondo.",
+  "cap.led": "Lupa ×8 · Strider",
+  "alt.ledanim": "Logo de Out Run desplazándose, en render LED ampliado.",
+  "cap.ledanim": "Lupa animada · Out Run en desplazamiento",
+  "s8.eyebrow": "Pixel-perfect",
+  "s8.h2": "Píxeles nítidos, no papilla",
+  "s8.p": "Una pantalla DMD solo tiene 4 096 puntos: cada píxel cuenta. El modo <strong>Pixel-perfect</strong> impone un factor de escala entero en lugar de un redimensionado fraccionario, para que cada píxel de la imagen caiga exactamente sobre un LED. En un logo pixel-art, la diferencia es inmediata:",
+  "alt.ppoff": "Strike Wolf sin pixel-perfect: letras reducidas y borrosas.",
+  "cap.ppoff": "Sin pixel-perfect · escala fraccionaria, 516 colores, letras borrosas",
+  "alt.ppon": "Strike Wolf con pixel-perfect: píxeles originales nítidos.",
+  "cap.ppon": "Con pixel-perfect · píxeles originales 1:1, 192 colores, el logo se desplaza",
+  "s3.eyebrow": "Manual",
+  "s3.h2": "Control sobre cada píxel",
+  "s3.p": "Recorte 128×32, brillo, contraste, nitidez, filtros, relleno y goma mágica, animaciones con easing y bucle, multi-imágenes y morphing — con deshacer/rehacer en cada paso.",
+  "alt.manual": "Pestaña MANUAL: efectos, filtros, herramientas de dibujo y vista previa de la animación.",
+  "s4.eyebrow": "Vídeo",
+  "s4.h2": "Un fragmento de vídeo, en GIF DMD",
+  "s4.p": "Elige el fragmento en la línea de tiempo y luego el encuadre: seguimiento automático de un sujeto, encuadre automático con zoom o puntos manuales que mueven la zona con el tiempo. La calidad automática ajusta los colores según el vídeo y el peso del GIF se muestra en directo.",
+  "alt.demovideo": "GIF 128×32 creado a partir de un vídeo del panel DMD.",
+  "cap.demovideo": "14 s de vídeo → GIF 128×32 animado",
+  "alt.video": "Pestaña VIDEO: línea de tiempo, encuadre y vista previa.",
+  "s5.eyebrow": "Textscroll",
+  "s5.h2": "Texto en movimiento",
+  "s5.p": "Escribe un mensaje, elige fuente, colores y efecto — arcoíris, neón, fuego, metal… — y luego la animación: desplazamiento, ola, Star Wars, máquina de escribir, lluvia Matrix, glitch. La duración se ajusta sola a la longitud del texto.",
+  "alt.demotext": "«INSERT COIN» en arcoíris desplazándose en 128×32.",
+  "cap.demotext": "GIF animado exportado por la aplicación",
+  "alt.textscroll": "Pestaña TEXTSCROLL: texto, fuente, efectos y animación.",
+  "divider2": "Pensado para pantallas DMD",
+  "s6.eyebrow": "RecalBox DMD",
+  "s6.h2": "El compañero del panel RecalBox DMD",
+  "s6.p": "Los GIF salen en el formato que espera el panel <a href=\"https://shan-aya.github.io/RecalBoxDMD/\" target=\"_blank\" rel=\"noopener\">RecalBox DMD</a>: 128×32, paleta reducida, peso controlado. Después, añádelos a su playlist o a su tarjeta SD.",
+  "footer.p1": "Interfaz y guía disponibles en francés, inglés y español."
+ }
+};
 
   var currentLang = "fr";
   var release = null;

@@ -29,3 +29,8 @@ Release 3 -->   v3.0 -- + renommage : DMD GIF Converter -> DMD GIF Creator
                           + traductions EN/ES completees : ~60 textes (messages d etat, panneaux
                             d information, titres des propositions, fenetres de choix, aide, trim video)
                           - version affichee 3.0.1, lanceur dmd_gif_creator_v301.py
+                v3.0.2 -- - onglet AUTO : textes restes en francais en anglais/espagnol traduits (noms des
+                            propositions Resize/Fill/Optimise/Artistique, ligne "retenu" et note
+                            "texte illisible en Resize -> Fill force", selection manuelle, barre d etat
+                            "N images | N manuelles")
+                          - version affichee 3.0.2, lanceur dmd_gif_creator_v302.py

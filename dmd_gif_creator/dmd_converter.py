@@ -4,7 +4,7 @@
 DMD GIF Creator
 Shan_ayA 2026
 
-Version: 3.0.1
+Version: 3.0.2
 
 Application multilingue complète de conversion d'images en GIF optimisés pour écrans DMD 128x32
 avec moteur comparatif , édition manuelle avancée et génération de texte animé.
@@ -27,7 +27,14 @@ Dépendances:
 # ============================================
 # safe-modify — Historique des modifications
 # ============================================
-# Version actuelle : v84
+# Version actuelle : v85
+#
+# v85 — 2026-09-24 — safe-modify — Version 3.0.2. Textes de l'onglet AUTO restés en français en EN/ES (vus sur les
+#      captures du README) : noms des propositions (Resize (adapté), Fill (scrolling), Optimisé, Artistique),
+#      ligne d'état "'Optimisé' retenu (score…), base…" et sa note "texte illisible en Resize → Fill forcé",
+#      "Sélection manuelle", barre d'état "N images | N manuelles". Passent par tr() (clés t_prop_*,
+#      t_retained, t_text_forces_fill, t_manual_pick, t_status_counts). 'name' n'est qu'un libellé d'affichage
+#      (aucune logique ne le compare) : traduit à la création, comportement inchangé.
 #
 # v84 — 2026-09-24 — safe-modify — Traitement par lot plus rapide (demande utilisateur "le traitement par lot est
 #      très long"). Profil mesuré : ~1 s/image sur 1 cœur, dont ~55 % choix des réglages et ~43 % encodage GIF
@@ -2594,7 +2601,7 @@ class DMDConverter:
     # ========================================================================
     # VERSION DU LOGICIEL
     # ========================================================================
-    APP_VERSION = "3.0.1"
+    APP_VERSION = "3.0.2"
 
     # ========================================================================
 
@@ -7263,7 +7270,7 @@ class DMDConverter:
             self.image_tree_hint.place(relx=0.5, rely=0.5, anchor="center")
 
         self.progress_text_var.set(
-            f"{len(self.images)} images | {len(self.manual_exports)} manuelles"
+            tr("t_status_counts", "{n} images | {m} manuelles", n=len(self.images), m=len(self.manual_exports))
         )
 
     def reauthorize_image(self):
@@ -7391,11 +7398,11 @@ class DMDConverter:
             fit_score, fit_settings, fit_canvas = self._best_variant(
                 img, fit_variants, pixel_perfect=force_pixel_perfect, resize_cache=variant_cache
             )
-            fit_settings = {**fit_settings, "name": "Resize (adapté)"}
+            fit_settings = {**fit_settings, "name": tr("t_prop_resize", "Resize (adapté)")}
             fill_score, fill_settings, fill_canvas = self._best_variant(
                 img, fill_variants, pixel_perfect=force_pixel_perfect, resize_cache=variant_cache
             )
-            fill_settings = {**fill_settings, "name": "Fill (scrolling)"}
+            fill_settings = {**fill_settings, "name": tr("t_prop_fill", "Fill (scrolling)")}
 
             self.ia_status_var.set(tr("t_optimizing", "🧹 Optimisation nettoyage / pixel-perfect..."))
             self.root.update()
@@ -7428,6 +7435,8 @@ class DMDConverter:
                     resize_cache=variant_cache,
                 )
             )
+            # v85 : libellé traduit (dmd_pipeline_quality nomme la variante "Optimisé")
+            opt_settings = {**opt_settings, "name": tr("t_prop_optimized", "Optimisé")}
 
             self.ia_status_var.set(tr("t_generating_artistic", "🎨 Génération propositions artistiques..."))
             self.root.update()
@@ -7519,11 +7528,15 @@ class DMDConverter:
             best_settings = self.image_settings[image_path]
 
             base_note = (
-                " (texte illisible en Resize → Fill forcé)" if text_forces_fill else ""
+                tr("t_text_forces_fill", " (texte illisible en Resize → Fill forcé)")
+                if text_forces_fill else ""
             )
             self.ia_status_var.set(
-                f"✓ '{opt_settings['name']}' retenu (score: {opt_score:.2f}), "
-                f"base: {retained_settings['name']}{base_note}"
+                tr(
+                    "t_retained", "✓ '{name}' retenu (score : {score}), base : {base}{note}",
+                    name=opt_settings["name"], score=f"{opt_score:.2f}",
+                    base=retained_settings["name"], note=base_note,
+                )
             )
 
             # Lancer preview animé
@@ -7810,7 +7823,7 @@ class DMDConverter:
         label = effect_name.replace("_effect", "").replace("_", " ").capitalize()
         settings = {
             **base_settings,
-            "name": f"Artistique: {label}",
+            "name": tr("t_prop_artistic", "Artistique : {label}", label=label),
             "_artistic_effect": effect_name,
         }
         frames, _fps = self.render_dmd_frame(
@@ -7960,7 +7973,8 @@ class DMDConverter:
 
             score_text = f"{score:.2f}" if score is not None else "—"
             self.ia_status_var.set(
-                f"👤 Sélection manuelle: '{settings['name']}' (score: {score_text})"
+                tr("t_manual_pick", "👤 Sélection manuelle : '{name}' (score : {score})",
+                   name=settings["name"], score=score_text)
             )
             self.start_continuous_preview(img_path, settings)
             logger.info(f"Proposition {idx+1} sélectionnée (score: {score_text})")

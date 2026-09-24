@@ -3,8 +3,9 @@ from __future__ import annotations
 # ============================================
 # safe-modify — Historique des modifications
 # ============================================
-# Version actuelle : v15
+# Version actuelle : v16
 #
+# v16 — 2026-09-24 — safe-modify — Clé TEXT_MAP de l'en-tête passée à "DMD Creator v3.0.2".
 # v15 — 2026-07-20 — safe-modify — Renommage de l'app "DMD GIF Converter" →
 #      "DMD GIF Creator" + montée de version v3.0.0 (voir dmd_converter.py
 #      v75 pour le détail complet) : clé `TEXT_MAP` "DMD Converter v2.7.4"
@@ -458,7 +459,7 @@ TEXT_MAP: Dict[str, str] = {
     "✅ Traiter sélection": "process_sel",
     "📂 Charger": "load",
     "✂️ Crop 128×32": "crop",
-    "DMD Creator v3.0.1": "app_header",
+    "DMD Creator v3.0.2": "app_header",
     "💾 Exporter GIF": "export_gif",
     "📚 Multi-images": "multi_images",
     "🎬 Morphing": "morphing",

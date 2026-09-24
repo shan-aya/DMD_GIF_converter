@@ -1,7 +1,7 @@
 {
-  "app_title": "DMD GIF Creator 128x32 - IA Mejorado v3.0.1",
+  "app_title": "DMD GIF Creator 128x32 - IA Mejorado v3.0.2",
   "scanning_images": "Buscando imágenes… {n}",
-  "app_header": "DMD Creator v3.0.1",
+  "app_header": "DMD Creator v3.0.2",
   "tab_auto": "AUTO",
   "tab_manual": "MANUAL",
   "tab_video": "VIDEO",
@@ -297,5 +297,13 @@
   "t_morph_done": "¡Morphing generado!",
   "t_morph_error": "Error de morphing",
   "t_batch_progress": "Procesando {pct}%: {name}",
-  "t_batch_done": "Terminado: {ok}/{total} GIF creados"
+  "t_batch_done": "Terminado: {ok}/{total} GIF creados",
+  "t_status_counts": "{n} imágenes | {m} manuales",
+  "t_prop_resize": "Resize (ajustado)",
+  "t_prop_fill": "Fill (desplazamiento)",
+  "t_prop_optimized": "Optimizado",
+  "t_prop_artistic": "Artístico: {label}",
+  "t_text_forces_fill": " (texto ilegible en Resize → Fill forzado)",
+  "t_retained": "✓ '{name}' elegido (puntuación: {score}), base: {base}{note}",
+  "t_manual_pick": "👤 Elección manual: '{name}' (puntuación: {score})"
 }
